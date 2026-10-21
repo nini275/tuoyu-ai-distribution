@@ -1,88 +1,88 @@
-# 价格与额度
+# Pricing and Usage Limits
 
-生效日期：2026 年 10 月 21 日
+Effective date: October 21, 2026
 
-本文说明拓域 / TuoYu 原型中的套餐、价格、额度计算和本地预览规则。当前版本尚未接入 Microsoft Store 的商品与购买凭证核验，应用内的套餐切换不会产生真实扣款，也不代表已经购买订阅。
+This document describes the plans, prices, usage calculations, and local-preview rules in the TuoYu prototype. The current build is not connected to Microsoft Store products or purchase-receipt validation. Switching plans in the app does not create a real charge and does not mean a subscription has been purchased.
 
-## 套餐
+## Plans
 
-价格单位为人民币（CNY）。下表是计划用于 Microsoft Store 中国区的参考价，正式上架后应以 Store 商品页展示的最终价格、税费和促销信息为准。
+Prices are in Chinese yuan (CNY). The table below shows reference prices planned for Microsoft Store in China. After release, the final price, taxes, and promotions shown on the Store product page take precedence.
 
-| 套餐 | 月付 | 年付 | 自建项目 | 渠道内容 | AI 索引包 |
+| Plan | Monthly | Yearly | User projects | Channel content | AI index packs |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| 免费版 | ¥0 | ¥0 | 1 个 | 每月 20 份 | 每月 1 份 |
-| 创作者版 | ¥49 / 月 | ¥399 / 年 | 10 个 | 每月 300 份 | 不限量 |
-| 专业版 | ¥149 / 月 | ¥1,299 / 年 | 50 个 | 每月 2,000 份 | 不限量 |
+| Free | ¥0 | ¥0 | 1 | 20 per month | 1 per month |
+| Creator | ¥49 / month | ¥399 / year | 10 | 300 per month | Unlimited |
+| Pro | ¥149 / month | ¥1,299 / year | 50 | 2,000 per month | Unlimited |
 
-年付价格按 10 个月月付价格计算。以参考价为准：
+Annual pricing equals ten monthly payments. Based on the reference prices:
 
-- 创作者版年付比连续 12 个月月付节省 ¥189，折合每月约 ¥33。
-- 专业版年付比连续 12 个月月付节省 ¥489，折合每月约 ¥108。
+- Creator annual billing saves ¥189 compared with 12 monthly payments, equivalent to about ¥33 per month.
+- Pro annual billing saves ¥489 compared with 12 monthly payments, equivalent to about ¥108 per month.
 
-## 额度单位
+## Usage Units
 
-### 自建项目
+### User Projects
 
-每个不属于演示数据、且仍保留在用户工作区中的自建项目占用 1 个自建项目名额。内置演示项目不占用套餐额度。
+Each user-created project that is not demo data and remains in the workspace consumes one project slot. Built-in demo projects do not count against plan limits.
 
-接入新项目时会自动生成最多 3 个渠道起步版本。这些版本属于真实渠道内容，并计入当月渠道内容额度。
+Adding a new project automatically generates up to three starter channel versions. These are real channel-content assets and count toward the monthly channel-content quota.
 
-### 渠道内容
+### Channel Content
 
-每个成功生成的渠道版本计 1 份：
+Each successfully generated channel version consumes one unit:
 
-- 一次选择 3 个渠道并成功生成，计 3 份。
-- 为同一项目再次生成内容，不因项目已存在而免费，仍按新生成的渠道版本计费。
-- 项目接入时自动生成的渠道起步版本按实际生成数量计入额度。
-- 编辑、复制、加入队列、排期和标记发布不额外扣减渠道内容额度。
+- Generating content for three channels in one operation consumes three units.
+- Regenerating content for an existing project is not free; each newly generated channel version consumes a unit.
+- Starter channel versions created during project intake count according to the number actually generated.
+- Editing, copying, adding to the queue, scheduling, and marking content as published do not consume additional channel-content units.
 
-如果当前剩余额度不足以完成整批生成，应用会在生成前阻止操作。当前原型不会生成部分内容，也不会扣除失败批次的额度。
+If the remaining quota cannot cover the full batch, the app blocks generation before it starts. The prototype does not generate partial content and does not charge failed batches.
 
-### AI 索引包
+### AI Index Packs
 
-每次成功生成或重新生成 1 份 AI 索引包计 1 份。重新生成会形成新的生成记录，因此即使项目事实没有变化，也会占用 1 份额度。复制或阅读已经生成的索引包不额外扣减。
+Each successful generation or regeneration of an AI index pack consumes one unit. Regeneration creates a new generation record, so it consumes one unit even when project facts have not changed. Copying or reading an existing index pack does not consume quota.
 
-## 重置与降级
+## Resets and Downgrades
 
-- 月度额度按北京时间（Asia/Shanghai）的自然月重置。
-- 未使用额度不会结转到下个月。
-- 套餐降级不会删除已有项目、内容资产、队列记录或索引包。
-- 套餐降级后，超过新套餐额度的已有数据仍可查看；新增项目、生成内容或生成索引包等超限操作会暂停。
-- 年付套餐的有效期以 Microsoft Store 结算记录为准，不是浏览器本地时间。
+- Monthly quotas reset at the start of each natural month in China Standard Time (`Asia/Shanghai`).
+- Unused quota does not roll over.
+- Downgrading a plan does not delete existing projects, content assets, queue records, or index packs.
+- After a downgrade, existing data above the new plan limits remains viewable, while actions that would exceed the limits, such as adding projects or generating content or index packs, are paused.
+- Microsoft Store billing records, not the browser's local clock, determine annual-plan validity.
 
-## 7 天专业版试用
+## Seven-Day Pro Trial
 
-当前原型为每个本地工作区提供一次 7 天专业版试用：
+The current prototype offers one seven-day Pro trial per local workspace:
 
-- 试用期间可使用专业版项目、渠道内容和索引包额度。
-- 试用期结束时，工作区会自动显示为免费版；已有数据保留。
-- 正式订阅版必须由服务端把试用资格与 Microsoft Store 账号或已验证的工作区绑定。仅依赖浏览器本地存储不能作为正式反滥用机制。
-- Microsoft Store 商品页未展示试用活动时，不应把本文视为已经生效的促销承诺。
+- Pro project, channel-content, and index-pack quotas are available during the trial.
+- When the trial expires, the workspace automatically displays the Free plan and retains existing data.
+- A production subscription system must bind trial eligibility on the server to a Microsoft Store account or verified workspace. Browser-local storage alone is not an acceptable anti-abuse mechanism.
+- If the Microsoft Store product page does not display a trial, this document must not be treated as an active promotional commitment.
 
-## 本地预览
+## Local Preview
 
-在 Store 商品与购买凭证核验完成前：
+Until Store products and purchase-receipt validation are complete:
 
-- “预览免费版”“预览此套餐”只会改变本地工作区显示的套餐与额度。
-- 不会请求付款、不会创建真实订阅，也不会产生自动续费。
-- 清除浏览器站点数据会重置本地套餐状态、用量和试用记录。
-- 本地套餐状态不能用于解锁正式付费服务，也不能作为购买凭证。
+- "Preview Free" and "Preview this plan" only change the plan and limits displayed in the local workspace.
+- They do not request payment, create a real subscription, or enable automatic renewal.
+- Clearing browser site data resets local plan state, usage, and trial records.
+- Local plan state cannot unlock a production paid service or serve as proof of purchase.
 
-正式版本需要以 Microsoft Store 返回的购买凭证为准，并在可信服务端验证订阅状态、到期时间和退款状态。浏览器中的 `localStorage` 只能作为界面缓存，不能作为最终授权依据。
+A production build must rely on purchase receipts returned by Microsoft Store and validate subscription status, expiry, and refund state on a trusted server. Browser `localStorage` is only interface cache and must not be the authoritative authorization source.
 
-## 付款、续订与退款
+## Payment, Renewal, and Refunds
 
-正式订阅上线后，购买、续订、取消和退款应由 Microsoft Store 处理。具体可用方式取决于届时配置的 Store 商品和适用的消费者法律。
+After a production subscription launches, Microsoft Store should handle purchases, renewals, cancellations, and refunds. Available options depend on the configured Store products and applicable consumer law.
 
-已完成的月付或年付周期通常不会因为主动取消而自动退款，但服务会持续到当前已付费周期结束或 Store 结算记录规定的日期。法律赋予消费者的强制性权利不受本文限制。
+A completed monthly or annual billing period generally is not automatically refunded when the user cancels, but service continues through the end of the paid period or the date specified in the Store billing record. Mandatory consumer rights are not limited by this document.
 
-## 变更
+## Changes
 
-套餐或额度发生实质变化时，项目方应在上线前更新本文和应用内说明，并按照适用法律及 Microsoft Store 政策向现有订阅用户提供必要通知。最终收费以用户确认购买时 Microsoft Store 展示的价格和条款为准。
+When plans or quotas change materially, the project team should update this document and the in-app notices before launch and provide required notice to existing subscribers under applicable law and Microsoft Store policy. The price and terms displayed by Microsoft Store when the user confirms a purchase are final.
 
-## 相关文件
+## Related Documents
 
-- [订阅条款](./SUBSCRIPTION_TERMS.md)
-- [隐私说明](./PRIVACY.md)
-- [Microsoft Store 发布说明](./STORE_PUBLISHING.md)
-- [版权声明](./COPYRIGHT.md)
+- [Subscription Terms](./SUBSCRIPTION_TERMS.md)
+- [Privacy Notice](./PRIVACY.md)
+- [Microsoft Store Publishing Guide](./STORE_PUBLISHING.md)
+- [Copyright Notice](./COPYRIGHT.md)

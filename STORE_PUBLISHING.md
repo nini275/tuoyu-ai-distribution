@@ -1,148 +1,148 @@
-# Microsoft Store 中国区发布说明
+# Microsoft Store China Publishing Guide
 
-更新日期：2026 年 10 月 21 日
+Updated: October 21, 2026
 
-## 当前状态
+## Current Status
 
-项目当前是可本地运行的 Web 原型，尚未提交 Microsoft Store，也没有可用的 Partner Center 应用身份、MSIX 包、商店商品 ID 或订阅加载项 ID。
+The project is currently a locally runnable web prototype. It has not been submitted to Microsoft Store and does not have an active Partner Center app identity, MSIX package, Store product ID, or subscription add-on ID.
 
-因此目前不能据本地套餐预览宣称已经完成真实订阅或上架。没有 Microsoft 开发者账号、Partner Center 应用身份和审核资料时，无法由代码仓库单独完成“直接发布”。
+Therefore, the local plan preview cannot be used to claim that real subscriptions or a Store listing are complete. Without a Microsoft developer account, a Partner Center app identity, and certification materials, the repository alone cannot perform a direct publication.
 
-## 发布前硬性依赖
+## Mandatory Prerequisites
 
-| 项目 | 当前状态 | 完成条件 |
+| Item | Current status | Completion criteria |
 | --- | --- | --- |
-| Microsoft 开发者账号 | 未确认 | 完成个人或组织身份验证，确认中国区可发布 |
-| Partner Center 应用 | 未创建 | 保留应用名称，取得 Package Identity 和 Publisher ID |
-| Windows 安装包 | 未生成 | 生成并签名可提交的 MSIX/AppX 或 PWA 打包产物 |
-| 公网 HTTPS 服务 | 未部署 | 正式域名、HTTPS、健康检查、备份与监控 |
-| 隐私政策 URL | 未部署 | 将 `PRIVACY.md` 发布为稳定公开 URL 并补齐联系人 |
-| 支持页面 | 未建立 | 支持邮箱、问题反馈、隐私请求和订阅支持流程 |
-| Store 订阅商品 | 未创建 | 月付/年付加载项、市场价格、试用与购买凭证验证 |
-| 商店素材 | 未完成 | 图标、截图、商店文案、年龄分级、系统要求 |
-| 中国区合规检查 | 未完成 | 主体、域名、内容、隐私、消费者权益和支付流程核验 |
+| Microsoft developer account | Not confirmed | Complete individual or organization verification and confirm eligibility to publish in China |
+| Partner Center app | Not created | Reserve the app name and obtain Package Identity and Publisher ID |
+| Windows package | Not generated | Generate and sign a submittable MSIX/AppX or PWA package |
+| Public HTTPS service | Not deployed | Production domain, HTTPS, health checks, backup, and monitoring |
+| Privacy-policy URL | Not deployed | Publish `PRIVACY.md` at a stable public URL and add contact details |
+| Support page | Not established | Support email, issue reporting, privacy requests, and subscription-support workflow |
+| Store subscription products | Not created | Monthly/yearly add-ons, market pricing, trial, and purchase-receipt validation |
+| Store assets | Not complete | Icons, screenshots, store copy, age rating, and system requirements |
+| China compliance review | Not complete | Operator, domain, content, privacy, consumer-rights, and payment-flow review |
 
-## 1. Partner Center 身份
+## 1. Partner Center Identity
 
-1. 确定运营主体是个人还是企业，并准备与主体一致的证明文件。
-2. 注册或登录 Microsoft Partner Center，完成开发者账号验证。
-3. 保留应用名称“拓域”或确定的英文名称。保留结果以 Partner Center 为准。
-4. 选择 Windows 应用形态：原生 Windows 包、PWA 打包应用或其他 Store 支持的包类型。
-5. 在 Store submission API 或 Partner Center 的产品身份页读取真实 Package Identity、Publisher ID 和 Store ID，不要手写占位值提交。
+1. Decide whether the operating entity is an individual or a business and prepare documents that match that entity.
+2. Register or sign in to Microsoft Partner Center and complete developer-account verification.
+3. Reserve the application name "TuoYu". Partner Center controls the reservation result.
+4. Choose the Windows app type: native Windows package, packaged PWA, or another Store-supported package format.
+5. Read the actual Package Identity, Publisher ID, and Store ID from the Store submission API or the Partner Center product-identity page. Do not submit handwritten placeholders.
 
-## 2. 应用打包
+## 2. App Packaging
 
-对于当前 Web 技术栈，优先评估 PWA 打包为 MSIX 的官方流程：
+For the current web stack, first evaluate the official process for packaging a PWA as MSIX:
 
-- 部署到稳定的 HTTPS 域名；
-- 添加 Web App Manifest，包含 192×192、512×512 和 maskable 图标；
-- 添加 Service Worker 或满足目标打包工具的离线要求；
-- 验证安装、卸载、窗口尺寸、深链接和系统返回行为；
-- 验证剪贴板、外链和新窗口在 Windows 容器中的行为；
-- 使用 Microsoft 推荐的 PWA 打包工具生成 MSIX/AppX；
-- 用 Partner Center 要求的应用身份重新打包，而不是沿用匿名测试身份；
-- 在 Windows 10/11、100%/150%/200% 缩放和不同屏幕尺寸上回归。
+- Deploy to a stable HTTPS domain.
+- Add a Web App Manifest with 192×192, 512×512, and maskable icons.
+- Add a service worker or otherwise satisfy the offline requirements of the chosen packaging tool.
+- Verify installation, uninstallation, window sizing, deep links, and system back behavior.
+- Verify clipboard, external-link, and new-window behavior in the Windows container.
+- Generate MSIX/AppX with a Microsoft-recommended PWA packaging tool.
+- Repackage with the app identity required by Partner Center instead of retaining an anonymous test identity.
+- Regress on Windows 10/11, at 100%/150%/200% scaling, and across different screen sizes.
 
-不要把 Partner Center 密码、代码签名证书、私钥或 Store 访问令牌提交到 Git 仓库。
+Never commit Partner Center passwords, code-signing certificates, private keys, or Store access tokens to the Git repository.
 
-## 3. 商店商品与订阅
+## 3. Store Products and Subscriptions
 
-正式收费前需要完成：
+Before charging real customers:
 
-1. 在 Partner Center 创建创作者版和专业版的月付、年付加载项。
-2. 记录真实的 Store 加载项 ID，并映射到应用内套餐。
-3. 接入官方 Store 购买流程；浏览器端不得伪造购买成功。
-4. 由服务端保存和验证购买凭证、订阅状态、到期时间、取消和退款状态。
-5. 对 7 天试用做账号或服务端绑定，避免清除 `localStorage` 反复领取。
-6. 在商品页清楚展示价格、计费周期、续订、取消、退款和试用规则。
-7. 在购买前显示最终人民币含税价格；以 Store 实际结算页为准。
-8. 测试购买、重复购买、恢复购买、取消、过期、退款、离线启动和网络恢复。
+1. Create monthly and annual Creator and Pro add-ons in Partner Center.
+2. Record the actual Store add-on IDs and map them to in-app plans.
+3. Integrate the official Store purchase flow; the browser must never fabricate a successful purchase.
+4. Store and validate purchase receipts, subscription status, expiry, cancellation, and refund status on the server.
+5. Bind the seven-day trial to an account or server-side record so clearing `localStorage` cannot repeatedly renew eligibility.
+6. Clearly disclose price, billing period, renewal, cancellation, refund, and trial rules on the product page.
+7. Show the final tax-inclusive CNY price before purchase, subject to the actual Store checkout page.
+8. Test purchase, duplicate purchase, restore purchase, cancellation, expiry, refund, offline launch, and network recovery.
 
-当前应用中的 `localStorage` 套餐切换必须继续标注为“本地预览”，直到上述链路真实完成。
+The `localStorage` plan switcher in the current app must remain labeled as a local preview until all of the above is operational.
 
-## 4. 隐私与支持
+## 4. Privacy and Support
 
-提交前至少准备：
+Prepare at least the following before submission:
 
-- 公网 HTTPS 隐私政策页面；
-- 公网 HTTPS 支持或常见问题页面；
-- 可长期接收隐私、订阅和退款问题的支持邮箱；
-- 正式运营者名称、联系方式以及适用法律要求的地址信息；
-- 数据处理清单：云主机、数据库、模型 API、邮件、日志、错误监控和 Store 服务；
-- 数据导出、删除和账号注销流程；
-- 安全事件响应与用户通知流程；
-- 如部署在中国大陆服务器或使用中国大陆域名，按实际情况确认 ICP 备案等要求。
+- A public HTTPS privacy-policy page
+- A public HTTPS support or FAQ page
+- A durable support email for privacy, subscription, and refund questions
+- The operator's legal name, contact information, and address details required by applicable law
+- A data-processing inventory covering cloud hosting, databases, model APIs, email, logs, error monitoring, and Store services
+- Data export, deletion, and account-closure procedures
+- Security-incident response and user-notification procedures
+- Confirmation of applicable ICP filing and similar requirements when hosting on mainland China infrastructure or using a mainland China domain
 
-`PRIVACY.md`、`SUBSCRIPTION_TERMS.md` 和 `PRICING.md` 是上线底稿，不是已经完成备案或法律审核的最终公开页面。
+`PRIVACY.md`, `SUBSCRIPTION_TERMS.md`, and `PRICING.md` are launch drafts, not final public pages that have completed regulatory filing or legal review.
 
-## 5. 商店页面素材
+## 5. Store Listing Assets
 
-建议准备的商店信息：
+Recommended Store information:
 
-- 应用名称：拓域 / TuoYu。
-- 产品定位：面向软件、模型与开源项目的 AI 渠道分发和搜索发现工作台。
-- 核心功能：项目接入、渠道匹配、内容生成、审核排期、AI 索引包。
-- 支持语言：简体中文；英文内容按实际完成度填写。
-- 分类：Developer tools 或 Business。
-- 系统要求、架构和支持的 Windows 版本。
-- 年龄分级问卷。
-- 1440×900 或更高分辨率的桌面截图。
-- 至少一张截图展示项目总览、内容工坊、发现页和套餐与用量。
-- 图标和商店宣传图，不包含第三方商标的误导性组合。
+- App name: TuoYu.
+- Positioning: An AI channel-distribution and search-discovery workspace for software, models, and open-source projects.
+- Core features: Project intake, channel matching, content generation, review scheduling, and AI index packs.
+- Supported language: English; list additional languages only when localization is complete.
+- Category: Developer tools or Business.
+- System requirements, architecture, and supported Windows versions.
+- Age-rating questionnaire.
+- Desktop screenshots sized 1440×900 or larger.
+- At least one screenshot showing project overview, Content Studio, Discovery page, and plan usage.
+- Icons and promotional artwork that do not misleadingly combine third-party trademarks.
 
-商店文案不得声称“保证被 ChatGPT、Claude、Gemini 推荐”“控制 AI 排名”或“向模型注入结果”。准确表述应是提高项目事实完整性和被正确理解、引用的概率。
+Store copy must not claim that the app guarantees recommendations from ChatGPT, Claude, or Gemini, controls AI rankings, or injects results into models. Accurate wording should describe improving the completeness of project facts and the likelihood of being correctly understood and cited.
 
-## 6. 中国区检查
+## 6. China-Specific Review
 
-面向中国大陆用户发布前，需要由运营者结合实际主体和业务确认：
+Before releasing to users in mainland China, the operator must review the actual entity and business against:
 
-- 运营主体、应用名称和商标使用是否清晰；
-- 收费页面与消费者权益说明是否完整；
-- 隐私政策、个人信息处理规则和未成年人保护要求；
-- 域名、服务器、ICP 备案和网络安全义务；
-- 生成式 AI、互联网信息和内容分发的适用要求；
-- 软件、模型、开源许可证和第三方平台条款；
-- 税务、发票、退款和 Store 结算流程；
-- 人民币定价、促销和年付展示是否与 Store 商品一致。
+- Clarity of the operating entity, app name, and trademark use
+- Completeness of paid-product pages and consumer-rights disclosures
+- Privacy policy, personal-information processing rules, and protections for minors
+- Domain, server, ICP filing, and cybersecurity obligations
+- Requirements applicable to generative AI, internet information, and content distribution
+- Software, model, open-source licenses, and third-party platform terms
+- Tax, invoice, refund, and Store settlement processes
+- Consistency of CNY pricing, promotions, and annual-plan displays with Store products
 
-本清单是工程准备清单，不替代律师、税务或合规专业意见。
+This checklist supports engineering preparation and does not replace legal, tax, or compliance advice.
 
-## 7. 提交与验证
+## 7. Submission and Validation
 
-建议按以下顺序推进：
+Recommended sequence:
 
-1. 完成公网部署和隐私/支持 URL。
-2. 完成 PWA 安装与 Windows 离线回归。
-3. 在 Partner Center 保留应用名称和应用身份。
-4. 建立 Store 订阅加载项并接入服务端凭证验证。
-5. 生成 Store 测试包，通过 Windows App Certification Kit。
-6. 提交 Private Audience 或测试飞行，验证购买和恢复购买。
-7. 上传正式 MSIX、商品文案、截图、年龄分级和隐私资料。
-8. 选择中国市场，提交认证。
-9. 认证通过后由 Partner Center 发布，不要在审核通过前宣称已经上架。
+1. Complete the public deployment and privacy/support URLs.
+2. Complete PWA installation and Windows offline regression testing.
+3. Reserve the app name and app identity in Partner Center.
+4. Create Store subscription add-ons and integrate server-side receipt validation.
+5. Generate a Store test package and pass the Windows App Certification Kit.
+6. Submit to a private audience or flight group and verify purchase and restore-purchase flows.
+7. Upload the production MSIX, listing copy, screenshots, age rating, and privacy materials.
+8. Select the China market and submit for certification.
+9. After certification passes, publish through Partner Center. Do not claim the app is live before approval.
 
-## 8. 验收测试
+## 8. Acceptance Tests
 
-正式提交前至少验证：
+Verify at least the following before production submission:
 
-- 1440、390、320 像素宽度无横向页面溢出；
-- 套餐月付/年付切换、试用、额度、降级和过期状态；
-- 刷新后项目、生成内容、队列和额度的持久化；
-- 超限时不会部分生成或错误扣减；
-- 关闭弹窗、键盘 Escape、背景点击和焦点可用；
-- Store 购买取消、失败、重复点击和网络中断；
-- 恢复购买、退款、过期与重新登录；
-- 无真实 API 密钥、个人信息或签名私钥进入安装包；
-- 安装包不包含 `work/`、测试截图、OAuth 辅助脚本或 Git 元数据。
+- No horizontal overflow at 1440, 390, or 320 pixel widths
+- Monthly/yearly plan switching, trial, quota, downgrade, and expiry states
+- Persistence of projects, generated content, queue, and usage after refresh
+- No partial generation or incorrect quota deduction when limits are exceeded
+- Modal close behavior, Escape key, backdrop clicks, and focus handling
+- Store purchase cancellation, failure, repeated clicks, and network interruption
+- Restore purchase, refund, expiry, and sign-in-again flows
+- No real API keys, personal information, or signing private keys in the package
+- No `work/` files, test screenshots, OAuth helper scripts, or Git metadata in the package
 
-## 9. 当前仍需用户提供
+## 9. Information Still Required from the Product Owner
 
-若要继续实际提交，需要产品所有者提供或确认：
+To proceed with an actual submission, the product owner must provide or confirm:
 
-- Microsoft Partner Center 开发者账号及可操作权限；
-- 最终运营主体、支持邮箱和公网域名；
-- 应用名称和 Package Identity；
-- Microsoft Store 月付/年付商品 ID；
-- 中国区定价是否采用本文参考价；
-- 正式隐私政策、支持页面和客服流程；
-- 签名与发布所需的私密凭据。
+- A Microsoft Partner Center developer account with operational access
+- The final operating entity, support email, and public domain
+- The app name and Package Identity
+- Microsoft Store monthly/yearly product IDs
+- Whether China pricing will use the reference prices in this document
+- Production privacy policy, support page, and customer-support workflow
+- Private credentials required for signing and publishing

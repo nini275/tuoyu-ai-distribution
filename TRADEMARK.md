@@ -1,46 +1,45 @@
-# 商标与品牌使用政策
+# Trademark and Brand Usage Policy
 
-## 项目标识
+## Project Marks
 
-本项目将以下标识用于识别拓域 / TuoYu 项目及其 Rita 分发智能体的来源：
+The project uses the following marks to identify the source of TuoYu and its Rita distribution agent:
 
-- 中文名称“拓域”
-- 英文名称“TuoYu”
-- 智能体名称“Rita”
-- 项目标志、图标、配色与具有来源识别作用的整体视觉组合
+- The name "TuoYu"
+- The agent name "Rita"
+- Project logos, icons, color treatments, and source-identifying visual combinations
 
-截至本文件创建时，项目方未声明上述标识已经在中国或其他司法辖区完成商标注册。本文件中的“商标”“品牌标识”用于描述来源识别权益，不表示已注册、正在审查或必然能够获得注册。
+As of the creation of this document, the project team does not claim that these marks are registered in China or any other jurisdiction. References to "trademarks" or "brand identifiers" describe source-identification interests and do not imply registration, pending applications, or guaranteed registrability.
 
-## 开源许可不包含商标许可
+## Open-Source License Does Not Include Trademark Rights
 
-[Apache License 2.0](./LICENSE) 第 6 条明确不授予项目方的商号、商标、服务标记或产品名称许可。获取、修改或分发源代码，不代表可以使用“拓域”“TuoYu”“Rita”或相关视觉标识冒充官方、关联方、认证版本或获得背书的版本。
+Section 6 of the [Apache License 2.0](./LICENSE) expressly excludes any license to the project's trade names, trademarks, service marks, or product names. Obtaining, modifying, or distributing the source code does not authorize use of "TuoYu", "Rita", or related visual identifiers to impersonate an official, affiliated, certified, or endorsed version.
 
-## 允许的使用
+## Permitted Uses
 
-在真实、准确且不造成混淆的前提下，第三方可以：
+When use is truthful, accurate, and not confusing, third parties may:
 
-- 提及本项目，并链接到官方代码仓库；
-- 说明某项目是拓域的开源分支，但必须同时清楚标明其为非官方修改版本；
-- 在新闻、评论、教学、兼容性说明和比较材料中合理引用项目名称；
-- 为说明代码来源而保留 `NOTICE`、版权和许可证中的必要名称。
+- Refer to the project and link to its official repository
+- State that a project is an open-source fork of TuoYu while clearly identifying it as an unofficial modified version
+- Make reasonable references to the project name in news, reviews, educational material, compatibility information, and comparisons
+- Retain necessary names in `NOTICE`, copyright notices, and licenses to identify code provenance
 
-## 需要明确许可的使用
+## Uses Requiring Explicit Permission
 
-未经项目方事先书面许可，不得：
+Without prior written permission from the project team, you may not:
 
-- 将上述标识或容易造成混淆的近似标识用作独立软件、模型、服务、公司、组织或应用商店项目的名称；
-- 使用上述标识或近似标识申请商标、域名、社交媒体账号、应用市场条目或其他来源识别权益；
-- 使用项目标志作为修改版本的官方标志，或暗示修改版本由项目方发布、认证、赞助或背书；
-- 以可能损害项目声誉、误导用户或让用户误认来源的方式使用上述标识。
+- Use the marks or confusingly similar marks as the name of an independent software product, model, service, company, organization, or app-store listing
+- Use the marks or confusingly similar marks to apply for trademarks, domains, social-media accounts, marketplace listings, or other source-identification rights
+- Use the project logo as the official logo of a modified version, or imply that a modified version is published, certified, sponsored, or endorsed by the project team
+- Use the marks in a way that may damage the project's reputation, mislead users, or cause source confusion
 
-获得许可也不得表述为商标注册、官方认证或法律所有权证明。项目方可以在使用造成混淆、损害消费者识别或违反适用法律时撤回有限许可。
+Permission does not constitute trademark registration, official certification, or proof of legal ownership. The project team may revoke limited permission when use causes confusion, harms consumer recognition, or violates applicable law.
 
-## 修改版本与分发
+## Modified Versions and Distribution
 
-修改版本应显著说明其修改状态，建议使用“非官方分支”“Unofficial fork”等清晰措辞，并替换容易导致官方误认的图标或产品名称。保留 `NOTICE` 仅用于满足 Apache-2.0 的归属要求，不代表获得商标许可。
+Modified versions must clearly disclose their modifications. Use explicit wording such as "Unofficial fork" and replace icons or product names that could cause users to mistake the build for an official release. Retaining `NOTICE` satisfies Apache-2.0 attribution requirements only; it does not grant trademark permission.
 
-## 权利保留与联系
+## Rights Reserved and Contact
 
-项目方保留依据适用商标法、反不正当竞争法、消费者保护法及其他法律主张权利、制止混淆和维护来源识别的权利。若需将项目名称或标志用于商业产品、活动、域名或合作宣传，请先通过代码仓库的 Issue 渠道联系维护者。
+The project team reserves all rights under applicable trademark law, unfair-competition law, consumer-protection law, and other laws to enforce its rights, prevent confusion, and protect source identification. To use the project name or logo in a commercial product, event, domain, or partnership promotion, contact the maintainers through the repository's Issue channel first.
 
-本政策不构成法律意见。实际保护范围取决于使用情况、公众认知、地域和注册状态；正式商业化前应针对目标市场完成商标检索和注册评估。
+This policy does not constitute legal advice. Actual protection depends on use, public recognition, geography, and registration status. Before commercialization, complete trademark searches and registration assessments for each target market.

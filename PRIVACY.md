@@ -1,90 +1,90 @@
-# 拓域隐私说明
+# TuoYu Privacy Notice
 
-生效日期：2026 年 10 月 21 日
+Effective date: October 21, 2026
 
-本说明适用于拓域工作台、拓域 MCP 工具目录、目录审核后台，以及随项目提供的本地 MCP Server。当前版本是本地优先的最小可用版本（MVP），不是已经完成公网合规部署的在线服务。
+This notice applies to the TuoYu workspace, TuoYu MCP tool catalog, catalog review admin, and local MCP server included with the project. The current build is a local-first minimum viable product (MVP), not an online service that has completed public-deployment compliance work.
 
-## 1. 当前处理的数据
+## 1. Data Currently Processed
 
-### Rita 工作台
+### Rita Workspace
 
-工作台中的项目草稿、渠道文案、审核状态、排期、发布记录、套餐预览和用量信息保存在浏览器 `localStorage`。这些数据主要由浏览器处理，不会因使用工作台而自动上传到拓域服务器。
+Project drafts, channel copy, review status, schedules, publishing records, plan previews, and usage information in the workspace are stored in browser `localStorage`. This data is primarily processed by the browser and is not automatically uploaded to TuoYu servers when the workspace is used.
 
-工作台存储键为 `tuoyu-distribution-workspace-v1`。清理浏览器站点数据会删除这些本地记录，并可能重置本地试用状态。
+The workspace storage key is `tuoyu-distribution-workspace-v1`. Clearing browser site data removes these local records and may reset local trial eligibility.
 
-### MCP 工具目录
+### MCP Tool Catalog
 
-创作者提交项目时，以下信息会发送到运行该站点的本地服务并保存在 SQLite 数据库：
+When a creator submits a project, the following information is sent to the local service hosting the site and stored in a SQLite database:
 
-- 项目名称、描述、分类、标签和使用场景
-- GitHub 或官网链接
-- 创作者填写的 GitHub Stars 和最近更新时间
-- 提交时间、审核状态、审核备注和推广标记
-- 系统生成的内部项目 ID 和自动审核标记
+- Project name, description, category, tags, and use cases
+- GitHub or website links
+- GitHub stars and latest update date supplied by the creator
+- Submission time, review status, review notes, and promotion flags
+- System-generated internal project ID and automated review flags
 
-默认数据库路径为 `data/catalog.sqlite`。目录数据用于公共搜索、MCP 工具返回、审核管理和透明推广加权。审核通过后的项目资料可被目录网页和 MCP 客户端读取。
+The default database path is `data/catalog.sqlite`. Catalog data is used for public search, MCP tool responses, review administration, and transparent promotion boosts. Approved project information may be read by the catalog website and MCP clients.
 
-### 审核后台
+### Review Admin
 
-管理员 Token 仅保存在当前标签页的 `sessionStorage`，关闭标签页或退出后台时会移除。管理员可通过本地服务读取、修改审核状态、调整推广标记或永久删除目录记录。
+The administrator token is stored only in the current tab's `sessionStorage` and is removed when the tab closes or the administrator signs out. Administrators can use the local service to read records, change review status, adjust promotion flags, or permanently delete catalog records.
 
-### 支付与账号
+### Payments and Accounts
 
-当前版本没有真实支付、账号系统或云端同步，不收集银行卡、账单地址或其他支付凭证。页面中的套餐切换和推广等级是本地产品预览或管理标记，不会产生扣款。
+The current build has no real payments, account system, or cloud sync, and it does not collect bank-card details, billing addresses, or other payment credentials. Plan switching and promotion tiers on the page are local product previews or administrative flags and do not create charges.
 
-## 2. 处理目的
+## 2. Processing Purposes
 
-上述数据仅用于：
+The data described above is used only to:
 
-- 提供项目提交、审核、搜索和 MCP 推荐功能
-- 计算与解释项目的基础分和推广加权
-- 防止重复提交和三方项目链接冲突
-- 管理审核记录、推广披露和项目删除
-- 保存用户主动创建的工作台内容
+- Provide project submission, review, search, and MCP recommendation features
+- Calculate and explain project base scores and promotion boosts
+- Prevent duplicate submissions and conflicts involving third-party project links
+- Manage review records, promotion disclosure, and project deletion
+- Preserve workspace content that users intentionally create
 
-当前版本不接入广告画像、跨站跟踪或行为分析服务，也不出售个人信息。
+The current build does not integrate advertising profiles, cross-site tracking, or behavioral-analytics services, and it does not sell personal information.
 
-## 3. 存储位置与共享
+## 3. Storage Location and Sharing
 
-当前部署默认只监听 `127.0.0.1`，数据通常保存在运行该项目的本机。除非运营者主动将服务部署到公网或配置第三方基础设施，否则不会自动传输到其他服务器。
+The current deployment listens only on `127.0.0.1` by default, and data is normally stored on the machine running the project. Unless the operator intentionally deploys the service publicly or configures third-party infrastructure, data is not automatically transmitted to another server.
 
-MCP 客户端调用本地 MCP Server 时，会读取同一 SQLite 数据库中的已审核项目。客户端如何使用和展示返回内容受该客户端自身的隐私政策约束。项目中的 GitHub、官网和第三方链接由相应站点独立处理访问数据。
+When an MCP client calls the local MCP server, it reads approved projects from the same SQLite database. The client's own privacy policy governs how it uses and displays returned content. GitHub, project websites, and other third-party links process visit data independently.
 
-如果未来接入云数据库、支付、邮件、分析或远程 MCP 服务，应在启用前更新本说明，列明服务提供方、处理地点和共享范围。
+If cloud databases, payments, email, analytics, or remote MCP services are added in the future, this notice must be updated before activation with the provider, processing location, and scope of sharing.
 
-## 4. 保存期限与删除
+## 4. Retention and Deletion
 
-- 浏览器工作台数据由用户自行控制，会一直保留到用户清理站点数据或使用应用内删除功能。
-- 目录项目会保留到管理员删除、运营者停止服务或数据库被清理。
-- 管理员可以删除单个项目；永久删除后，网页和 MCP 搜索不再返回该项目。
-- 删除数据库文件会清空整个本地目录，包括审核与推广记录。
-- 正式公网部署必须提供明确的申请删除、更正和撤回渠道，并设置可验证的保存期限。
+- Users control browser workspace data, which remains until they clear site data or use in-app deletion features.
+- Catalog projects remain until an administrator deletes them, the operator stops the service, or the database is cleared.
+- Administrators can delete individual projects. After permanent deletion, the website and MCP search no longer return the project.
+- Deleting the database file clears the entire local catalog, including review and promotion records.
+- A production public deployment must provide clear channels to request deletion, correction, and consent withdrawal, along with verifiable retention periods.
 
-## 5. 数据质量与更正
+## 5. Data Quality and Correction
 
-提交者应确保项目名称、链接、描述、指标和商标信息准确。当前 MVP 尚未提供面向提交者的账号、验证码和在线更正流程。公网版本至少应提供支持邮箱、身份核验、更正处理和申诉时限。
+Submitters must ensure that project names, links, descriptions, metrics, and trademark information are accurate. The current MVP does not provide submitter accounts, CAPTCHA, or an online correction workflow. A public deployment should provide at least a support email, identity verification, correction handling, and response times for appeals.
 
-如果项目资料发生变化、不再公开、许可证改变或提交者失去发布授权，运营者应暂停或删除相关记录。
+If project information changes, is no longer public, changes license, or the submitter loses publishing authorization, the operator should suspend or delete the relevant record.
 
-## 6. 安全措施与边界
+## 6. Security Measures and Limits
 
-项目采用管理员 Bearer Token、请求体大小限制、JSON Content-Type 校验、基础安全响应头和 SQLite 本地存储。这些措施不等于生产级安全。正式公网部署前必须补齐：
+The project uses an administrator bearer token, request-body size limits, JSON Content-Type validation, baseline security headers, and local SQLite storage. These measures do not constitute production-grade security. Before a public deployment, add:
 
-- HTTPS、反向代理、限流、验证码和反垃圾
-- 管理员身份系统、最小权限、审计和 Token 轮换
-- 数据库备份、恢复和静态或磁盘加密策略
-- 漏洞响应、日志脱敏、数据删除核验和事件通知流程
+- HTTPS, a reverse proxy, rate limiting, CAPTCHA, and anti-spam controls
+- An administrator identity system, least privilege, auditing, and token rotation
+- Database backup, recovery, and encryption at rest or disk-encryption policies
+- Vulnerability response, log redaction, deletion verification, and incident-notification procedures
 
-## 7. 未成年人
+## 7. Minors
 
-本服务面向软件、模型和开源项目创作者及开发者，不面向未成年人单独设计，也不会有意收集未成年人的个人资料。
+The Service is intended for software, model, and open-source project creators and developers. It is not designed specifically for minors and does not intentionally collect personal information from minors.
 
-## 8. 运营者与联系方式
+## 8. Operator and Contact Information
 
-当前本地 MVP 尚未配置公网运营主体和隐私联系邮箱。正式发布到公网或 Microsoft Store 前，必须在本节补充运营者法定名称、注册地址、支持邮箱、数据处理地点和响应时限。
+The current local MVP does not have a public operating entity or privacy contact email. Before public or Microsoft Store release, this section must include the operator's legal name, registered address, support email, data-processing locations, and response times.
 
-在补充上述信息前，不应将本版本描述为可直接面向公众收集个人资料的正式服务。
+Until that information is added, this version must not be described as a production service ready to collect personal information from the public.
 
-## 9. 更新
+## 9. Updates
 
-当数据类型、处理目的、部署方式或第三方服务发生变化时，应更新本说明和生效日期。重大变化应在正式产品中通过显著通知和重新同意流程处理。
+This notice and its effective date must be updated when data types, processing purposes, deployment methods, or third-party services change. Material changes in a production product should be handled through prominent notice and a renewed consent process.

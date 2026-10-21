@@ -1,29 +1,29 @@
-# 版权声明
+# Copyright Notice
 
-Copyright (c) 2026 Yan Sihan. 保留所有未在本项目许可证中明确授予的权利。
+Copyright (c) 2026 Yan Sihan. All rights not expressly granted by this project's license are reserved.
 
-## 权利范围
+## Scope of Rights
 
-除本文件或第三方声明另有说明外，拓域 / TuoYu 项目中的原创源代码、界面设计、交互文案、文档、品牌图形及相关创作成果，其著作权由 Yan Sihan 持有。
+Unless otherwise stated in this document or a third-party notice, Yan Sihan owns the copyright in the original source code, interface designs, interaction copy, documentation, brand graphics, and related creative work in the TuoYu project.
 
-本项目原创代码与文档依据 [Apache License 2.0](./LICENSE) 授权。该许可证允许在遵守许可证条件的前提下使用、修改和分发本项目，但不转让著作权，也不授予商标权。
+Original project code and documentation are licensed under the [Apache License 2.0](./LICENSE). The license permits use, modification, and distribution subject to its terms, but it does not transfer copyright or grant trademark rights.
 
-## 品牌与来源识别
+## Brand and Source Identification
 
-“拓域”“TuoYu”“Rita”以及项目使用的标志、图标和整体视觉识别，属于项目来源识别标识。Apache-2.0 许可证不构成对这些名称或图形的商标许可。相关使用规则见 [TRADEMARK.md](./TRADEMARK.md)。
+"TuoYu", "Rita", and the project's logos, icons, and overall visual identity are source-identifying marks. The Apache-2.0 license does not grant trademark rights in these names or graphics. See [TRADEMARK.md](./TRADEMARK.md) for usage rules.
 
-## 用户与发布者内容
+## User and Publisher Content
 
-当前版本是本地浏览器原型。用户录入的项目名称、链接、简介及其他内容保存在用户自己的浏览器中，本项目不会因读取或展示这些内容而取得其所有权。
+The current build is a local browser prototype. Project names, links, descriptions, and other content entered by users are stored in the user's own browser. The project does not acquire ownership of that content merely by reading or displaying it.
 
-发布者应确保自己拥有提交、生成、复制和发布相关软件、模型、图片、文本及其他材料的必要权利。最终发布内容、第三方平台条款和适用法律应由发布者自行核验。
+Publishers must ensure that they hold the rights required to submit, generate, copy, and publish the relevant software, models, images, text, and other materials. Publishers are responsible for verifying final content, third-party platform terms, and applicable law.
 
-## 第三方材料
+## Third-Party Materials
 
-项目中包含的第三方软件、图标与许可证归各自权利人所有，不适用上述项目版权归属声明。具体信息见 [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)。
+Third-party software, icons, and licenses included in the project remain the property of their respective rights holders and are not covered by the project copyright statement above. See [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md) for details.
 
-## 修改版本
+## Modified Versions
 
-分发本项目源代码或修改版本时，应保留 [LICENSE](./LICENSE)、[NOTICE](./NOTICE) 及适用的版权和第三方许可声明，并对修改过的文件作出显著说明。修改版本不得暗示其为拓域官方版本或获得项目方背书。
+When distributing the source code or a modified version, retain [LICENSE](./LICENSE), [NOTICE](./NOTICE), and applicable copyright and third-party license notices, and clearly identify modified files. Modified versions must not imply that they are official TuoYu versions or endorsed by the project team.
 
-本声明用于说明项目权利边界，不构成法律意见。
+This notice describes the project's rights boundaries and does not constitute legal advice.

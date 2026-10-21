@@ -1,16 +1,16 @@
-# 拓域 MCP 工具目录
+# TuoYu MCP Tool Catalog
 
-拓域 MCP 目录是一个本地优先的软件、模型与开源项目发现服务。它向 MCP 客户端提供两个只读工具：
+The TuoYu MCP catalog is a local-first discovery service for software, models, and open-source projects. It exposes two read-only tools to MCP clients:
 
-- `search_tools`：按关键词、分类或使用场景搜索已审核项目。
-- `recommend_tools`：根据用户任务返回带排序依据的项目建议。
+- `search_tools`: Searches approved projects by keyword, category, or use case.
+- `recommend_tools`: Returns ranked project recommendations for a user task, including ranking details.
 
-当前版本是可运行的 MVP，不会直接控制 Claude、Cursor、ChatGPT 或其他 AI 客户端的最终回答。客户端是否调用工具、如何使用返回结果以及如何展示内容，由各客户端决定。
+The current version is a working MVP. It does not directly control the final response of Claude, Cursor, ChatGPT, or another AI client. Each client decides whether to call the tools, how to use the returned data, and how to present it.
 
-## 工作方式
+## How It Works
 
 ```text
-创作者浏览器
+Creator browser
   catalog.html
        |
        v
@@ -20,52 +20,54 @@ Node HTTP API  ---- SQLite: data/catalog.sqlite
   admin.html          src/mcp-server.js
                             |
                             v
-                    Claude / Cursor / 其他 MCP 客户端
+               Claude / Cursor / other MCP clients
 ```
 
-目录页面、管理后台和 MCP Server 共用同一个 SQLite 数据库。项目提交后默认为 `pending`，只有管理员改为 `approved` 后才会进入 MCP 搜索结果。
+The catalog page, admin console, and MCP server share the same SQLite database. New submissions start as `pending` and enter MCP search results only after an administrator changes their status to `approved`.
 
-## 环境要求
+## Requirements
 
-- Node.js `22.13.0` 或更高版本
-- 支持 stdio MCP Server 的客户端
-- 不需要安装 npm 依赖；当前实现使用 Node 内置的 HTTP 与 `node:sqlite`
+- Node.js `22.13.0` or later
+- A client that supports stdio MCP servers
+- No npm dependencies; the current implementation uses Node's built-in HTTP server and `node:sqlite`
 
-先启动 HTTP 服务和审核后台：
+Start the HTTP server and review admin first:
 
 ```powershell
-$env:TUOYU_ADMIN_TOKEN = "请替换为至少 16 个字符的随机 Token"
+$env:TUOYU_ADMIN_TOKEN = "Replace with a random token of at least 16 characters"
 node .\server.js
 ```
 
-打开：
+Open:
 
-- 工具目录：`http://127.0.0.1:4173/catalog.html`
-- 审核后台：`http://127.0.0.1:4173/admin.html`
+- Tool catalog: `http://127.0.0.1:4173/catalog.html`
+- Review admin: `http://127.0.0.1:4173/admin.html`
 
-服务器默认只监听 `127.0.0.1`。如需部署到其他主机，可显式设置 `HOST`，但必须先补齐身份认证、TLS、反向代理、限流和审计。
+The server listens only on `127.0.0.1` by default. To deploy it on another host, explicitly set `HOST`, but add authentication, TLS, a reverse proxy, rate limiting, and audit logging first.
 
-## Cursor 配置
+## Cursor Configuration
 
-项目级配置放在仓库的 `.cursor/mcp.json`，全局配置放在用户目录的 `.cursor/mcp.json`。请将路径替换为当前机器上的绝对路径：
+Repository-level configuration belongs in `.cursor/mcp.json`; global configuration belongs in `.cursor/mcp.json` under your home directory. Replace `<ABSOLUTE_PATH_TO_REPOSITORY>` with the absolute path to your clone:
 
 ```json
 {
   "mcpServers": {
     "tuoyu-catalog": {
-      "command": "C:\\Users\\yansihan\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "command": "node",
       "args": [
-        "C:\\Users\\yansihan\\Documents\\Codex\\2026-10-21\\ba\\src\\mcp-server.js"
+        "<ABSOLUTE_PATH_TO_REPOSITORY>/src/mcp-server.js"
       ],
       "env": {
-        "TUOYU_DB_PATH": "C:\\Users\\yansihan\\Documents\\Codex\\2026-10-21\\ba\\data\\catalog.sqlite"
+        "TUOYU_DB_PATH": "<ABSOLUTE_PATH_TO_REPOSITORY>/data/catalog.sqlite"
       }
     }
   }
 }
 ```
 
-如果 `node` 已经在 `PATH` 中，可以简化：
+If `node` is not on `PATH`, replace `node` with the absolute path to your Node.js executable.
+
+The shorter configuration is sufficient when the default catalog database path is acceptable:
 
 ```json
 {
@@ -80,15 +82,15 @@ node .\server.js
 }
 ```
 
-## Claude Desktop 配置
+## Claude Desktop Configuration
 
-Windows 上通常编辑：
+On Windows, edit:
 
 ```text
 %APPDATA%\Claude\claude_desktop_config.json
 ```
 
-加入：
+Add:
 
 ```json
 {
@@ -106,40 +108,40 @@ Windows 上通常编辑：
 }
 ```
 
-保存配置后重启 Claude Desktop。不同客户端版本可能调整配置文件位置或界面入口，应以对应客户端当前文档为准。
+Restart Claude Desktop after saving the configuration. Client versions may move configuration files or settings screens, so always consult the documentation for the installed version.
 
-## 本地调试
+## Local Debugging
 
-直接启动 stdio Server：
+Start the stdio server directly:
 
 ```powershell
 npm run mcp:catalog
 ```
 
-也可以使用 `TUOYU_DB_PATH` 指向独立测试数据库：
+You can also point `TUOYU_DB_PATH` to an isolated test database:
 
 ```powershell
 $env:TUOYU_DB_PATH = "C:\absolute\path\to\data\catalog-test.sqlite"
 npm run mcp:catalog
 ```
 
-stdio Server 不使用 HTTP 端口，客户端通过标准输入输出发送 JSON-RPC 消息。不要把调试日志写到标准输出，否则会破坏 MCP 协议；当前诊断信息写入标准错误。
+The stdio server does not use an HTTP port. Clients exchange JSON-RPC messages over standard input and output. Never write debug logs to standard output because that will corrupt the MCP protocol. The current implementation writes diagnostics to standard error.
 
 ## `search_tools`
 
-用途：按关键词、分类或场景查找已审核项目。
+Purpose: Find approved projects by keyword, category, or use case.
 
-参数：
+Parameters:
 
-| 参数 | 类型 | 必填 | 说明 |
+| Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
-| `query` | string | 否 | 项目名、技术词或任务描述，最多 500 字符 |
-| `category` | string | 否 | 精确分类，例如 `Agent 平台` |
-| `use_case` | string | 否 | 具体使用场景，最多 300 字符 |
-| `limit` | integer | 否 | 1 到 50，默认 10 |
-| `include_sponsored` | boolean | 否 | 是否允许推广加权，默认 `true` |
+| `query` | string | No | Project name, technology term, or task description, up to 500 characters |
+| `category` | string | No | Exact category, for example `Agent platforms` |
+| `use_case` | string | No | Specific use case, up to 300 characters |
+| `limit` | integer | No | 1 to 50, default 10 |
+| `include_sponsored` | boolean | No | Whether promotion boosts are allowed, default `true` |
 
-调用示例：
+Example call:
 
 ```json
 {
@@ -149,8 +151,8 @@ stdio Server 不使用 HTTP 端口，客户端通过标准输入输出发送 JSO
   "params": {
     "name": "search_tools",
     "arguments": {
-      "query": "本地运行大模型",
-      "category": "模型运行时",
+      "query": "run large language models locally",
+      "category": "Model runtimes",
       "limit": 5,
       "include_sponsored": true
     }
@@ -160,18 +162,18 @@ stdio Server 不使用 HTTP 端口，客户端通过标准输入输出发送 JSO
 
 ## `recommend_tools`
 
-用途：根据用户的具体任务给出候选项目。推荐结果仍先在目录中做相关性筛选，再计算质量分和推广加权。
+Purpose: Return candidate projects for a specific user task. Results are first filtered for relevance, then scored by quality and any disclosed promotion boost.
 
-参数：
+Parameters:
 
-| 参数 | 类型 | 必填 | 说明 |
+| Parameter | Type | Required | Description |
 | --- | --- | --- | --- |
-| `need` | string | 是 | 用户任务或目标，2 到 500 字符 |
-| `category` | string | 否 | 可选精确分类 |
-| `limit` | integer | 否 | 1 到 20，默认 5 |
-| `include_sponsored` | boolean | 否 | 是否允许推广加权，默认 `true` |
+| `need` | string | Yes | User task or goal, 2 to 500 characters |
+| `category` | string | No | Optional exact category |
+| `limit` | integer | No | 1 to 20, default 5 |
+| `include_sponsored` | boolean | No | Whether promotion boosts are allowed, default `true` |
 
-调用示例：
+Example call:
 
 ```json
 {
@@ -181,7 +183,7 @@ stdio Server 不使用 HTTP 端口，客户端通过标准输入输出发送 JSO
   "params": {
     "name": "recommend_tools",
     "arguments": {
-      "need": "帮我找一个可以本地运行大模型并暴露 API 的工具",
+      "need": "Find a tool that runs large language models locally and exposes an API",
       "limit": 3,
       "include_sponsored": true
     }
@@ -189,22 +191,22 @@ stdio Server 不使用 HTTP 端口，客户端通过标准输入输出发送 JSO
 }
 ```
 
-## 返回结构
+## Response Structure
 
-每个结果至少包含：
+Each result contains at least:
 
 ```json
 {
-  "id": "项目 ID",
-  "name": "项目名称",
-  "description": "项目描述",
+  "id": "project ID",
+  "name": "Project name",
+  "description": "Project description",
   "links": {
     "website": "https://example.com",
     "repository": "https://github.com/example/project"
   },
-  "category": "模型运行时",
+  "category": "Model runtimes",
   "tags": ["llm", "local"],
-  "useCases": ["本地运行大模型"],
+  "useCases": ["run large language models locally"],
   "github": {
     "stars": 12345,
     "lastUpdated": "2026-10-01T00:00:00.000Z"
@@ -217,7 +219,7 @@ stdio Server 不使用 HTTP 端口，客户端通过标准输入输出发送 JSO
   "paidPlacement": {
     "tier": "boost",
     "disclosed": true,
-    "label": "付费推广"
+    "label": "Paid promotion"
   },
   "ranking": {
     "relevanceScore": 82,
@@ -230,44 +232,44 @@ stdio Server 不使用 HTTP 端口，客户端通过标准输入输出发送 JSO
 }
 ```
 
-顶层还会返回 `result_count`、`sponsored_count` 和 `ranking_policy`。
+The top-level response also includes `result_count`, `sponsored_count`, and `ranking_policy`.
 
-## 排序与推广规则
+## Ranking and Promotion Rules
 
-排序公式：
+Ranking formula:
 
 ```text
 finalScore = baseScore + paidBoost
 ```
 
-基础分由以下信号组成：
+The base score uses the following signals:
 
-- GitHub stars：35%
-- 最近更新时间：30%
-- 描述质量：25%
-- 资料完整度：10%
+- GitHub stars: 35%
+- Update recency: 30%
+- Description quality: 25%
+- Profile completeness: 10%
 
-相关性会与基础质量分组合为 `baseScore`。推广等级：
+Relevance is combined with the quality score to produce `baseScore`. Promotion tiers are:
 
-| `promotionTier` | 加权 |
+| `promotionTier` | Boost |
 | --- | ---: |
 | `none` | 0 |
 | `boost` | +8 |
 | `featured` | +15 |
 
-约束：
+Constraints:
 
-- 只有 `approved` 项目可以获得推广加权。
-- 项目必须先通过关键词、分类或使用场景相关性筛选。
-- 设置 `include_sponsored: false` 后，所有 `paidBoost` 都会变为 `0`。
-- `isPaidPlacement`、`paidBoost` 和 `paidPlacement.label` 始终披露推广状态。
-- 客户端展示推广结果时，应同时展示 `paidPlacement.label`，不得描述为平台客观排名或官方背书。
+- Only `approved` projects can receive a promotion boost.
+- A project must first pass keyword, category, or use-case relevance filtering.
+- Setting `include_sponsored: false` forces every `paidBoost` to `0`.
+- `isPaidPlacement`, `paidBoost`, and `paidPlacement.label` always disclose promotion status.
+- Clients that display promoted results should show `paidPlacement.label` as well. Promoted placement must not be described as an objective platform ranking or official endorsement.
 
-当前“付费”是本地推广标记模拟。提交接口不会收费，后台也不会调用支付或结算服务。
+The current "paid" state is a local promotion-flag simulation. The submission endpoint does not charge a fee, and the admin console does not call a payment or settlement service.
 
 ## HTTP API
 
-公共接口：
+Public endpoints:
 
 - `GET /api/health`
 - `GET /api/catalog/search?q=&category=&useCase=&limit=&includeSponsored=`
@@ -275,7 +277,7 @@ finalScore = baseScore + paidBoost
 - `GET /api/catalog/tools/:id`
 - `POST /api/catalog/submissions`
 
-管理接口需要：
+Admin endpoints require:
 
 ```http
 Authorization: Bearer <TUOYU_ADMIN_TOKEN>
@@ -285,7 +287,7 @@ Authorization: Bearer <TUOYU_ADMIN_TOKEN>
 - `PATCH /api/admin/tools/:id`
 - `DELETE /api/admin/tools/:id`
 
-后台配置示例：
+Example admin update:
 
 ```json
 {
@@ -294,29 +296,29 @@ Authorization: Bearer <TUOYU_ADMIN_TOKEN>
   "promotionActive": true,
   "githubStars": 12345,
   "lastUpdated": "2026-10-01T00:00:00.000Z",
-  "reviewNote": "链接、许可证和 GitHub 指标已核验"
+  "reviewNote": "Verified the link, license, and GitHub metrics"
 }
 ```
 
-删除项目：
+Delete a project:
 
 ```http
-DELETE /api/admin/tools/项目ID
+DELETE /api/admin/tools/PROJECT_ID
 Authorization: Bearer <TUOYU_ADMIN_TOKEN>
 ```
 
-删除是永久操作，会同时移除项目审核记录、指标和推广状态。后台界面会在执行前要求二次确认。
+Deletion is permanent and removes the project's review record, metrics, and promotion status. The admin interface asks for confirmation before executing the request.
 
-## 当前边界
+## Current Limits
 
-这是本地 MVP，不是公网托管平台。正式上线前必须补齐：
+This is a local MVP, not a public hosting platform. A production launch must add:
 
-- 公开提交接口的限流、验证码、反垃圾和滥用监控
-- 管理员身份系统、最小权限、操作审计和 Token 轮换
-- GitHub stars 与更新时间的服务端校验或实时同步
-- 远程 MCP 传输、OAuth、租户隔离和配额
-- 支付订单、推广有效期、退款和发票状态
-- 删除操作审计、误删恢复、项目更正和申诉处理时限
-- 正式隐私政策、服务条款、运营者与支持联系方式
+- Rate limiting, CAPTCHA, anti-spam, and abuse monitoring for the public submission endpoint
+- An administrator identity system, least privilege, action auditing, and token rotation
+- Server-side verification or real-time synchronization for GitHub stars and update dates
+- Remote MCP transport, OAuth, tenant isolation, and quotas
+- Payment orders, promotion expiry, refunds, and invoice status
+- Delete auditing, accidental-deletion recovery, project corrections, and appeal response times
+- A production privacy policy, terms of service, operator identity, and support contact
 
-在这些条件完成前，不应宣称已接入真实支付、已被各大 AI 平台推荐或能够控制任何 AI 客户端的最终回答。
+Until these requirements are complete, do not claim that the project supports real payments, is recommended by major AI platforms, or can control the final response of any AI client.
