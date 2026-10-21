@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="拓域 MCP 工具目录：让 AI 客户端按关键词、分类和使用场景搜索可审核的软件、模型与开源项目。"
+    />
+    <title>拓域 MCP 工具目录</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./catalog.css" />
+  </head>
+  <body class="catalog-page">
+    <header class="catalog-topbar">
+      <a class="catalog-brand" href="./" aria-label="返回拓域工作台">
+        <span class="brand-mark">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M7 23.5V8.5h8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M25 8.5v15h-8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M11 16h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+            <circle cx="16" cy="16" r="2.7" fill="currentColor" />
+          </svg>
+        </span>
+        <span>
+          <strong>拓域 MCP</strong>
+          <small>DISCOVERY CATALOG</small>
+        </span>
+      </a>
+      <nav class="catalog-topnav" aria-label="页面导航">
+        <a href="#directory">目录</a>
+        <a href="#submit">提交项目</a>
+        <a href="./MCP.md">接入文档</a>
+        <a class="catalog-workbench-link" href="./">
+          <i data-lucide="arrow-up-right"></i>
+          返回工作台
+        </a>
+      </nav>
+    </header>
+
+    <main class="catalog-main">
+      <section class="catalog-intro" aria-labelledby="catalog-title">
+        <div>
+          <span class="catalog-kicker">MCP NATIVE DIRECTORY</span>
+          <h1 id="catalog-title">让工具被 AI 正确找到。</h1>
+          <p>
+            面向 Claude、Cursor 与其他 MCP 客户端的结构化工具目录。结果按项目质量与任务相关性排序，付费推广始终明确标注。
+          </p>
+        </div>
+        <div class="catalog-policy">
+          <i data-lucide="badge-check"></i>
+          <div>
+            <strong>透明推广规则</strong>
+            <span>相关性先过滤，推广加权最高 15 分。</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="catalog-search-panel" id="directory" aria-labelledby="directory-title">
+        <div class="catalog-search-heading">
+          <div>
+            <span class="catalog-section-label">SEARCH / RECOMMEND</span>
+            <h2 id="directory-title">工具目录</h2>
+          </div>
+          <span class="catalog-live-state" id="catalog-live-state">正在读取目录</span>
+        </div>
+
+        <form class="catalog-search-form" id="catalog-search-form">
+          <label class="catalog-search-field">
+            <i data-lucide="search"></i>
+            <span class="sr-only">搜索关键词或使用场景</span>
+            <input
+              id="catalog-query"
+              name="query"
+              type="search"
+              placeholder="例如：本地运行大模型、Agent 工作流、RAG"
+              autocomplete="off"
+            />
+          </label>
+          <label class="catalog-select-field">
+            <span class="sr-only">分类</span>
+            <select id="catalog-category" name="category">
+              <option value="">全部分类</option>
+            </select>
+          </label>
+          <label class="catalog-sponsored-toggle">
+            <input id="include-sponsored" type="checkbox" checked />
+            <span>
+              <strong>允许推广结果</strong>
+              <small>推广结果会标注</small>
+            </span>
+          </label>
+          <button class="button button--primary catalog-search-submit" type="submit">
+            <i data-lucide="scan-search"></i>
+            <span>搜索目录</span>
+          </button>
+        </form>
+
+        <div class="catalog-result-meta">
+          <span id="catalog-result-count">准备搜索</span>
+          <button class="text-button" type="button" id="catalog-clear-filters">清除筛选</button>
+        </div>
+        <div class="catalog-results" id="catalog-results" aria-live="polite"></div>
+      </section>
+
+      <section class="catalog-submit-section" id="submit" aria-labelledby="submit-title">
+        <div class="catalog-submit-copy">
+          <span class="catalog-section-label">PUBLISHER INTAKE</span>
+          <h2 id="submit-title">提交你的软件、模型或开源项目</h2>
+          <p>
+            提交后先进入人工审核。只有链接有效、描述清晰且符合目录范围的项目会进入 MCP 搜索结果。
+          </p>
+          <div class="catalog-review-steps" aria-label="审核流程">
+            <span><b>01</b> 表单校验</span>
+            <span><b>02</b> 人工审核</span>
+            <span><b>03</b> 上架可检索</span>
+          </div>
+        </div>
+
+        <form class="catalog-submit-form" id="catalog-submit-form">
+          <div class="catalog-form-grid">
+            <label>
+              <span>项目名称</span>
+              <input name="name" required maxlength="100" placeholder="例如：Agentloom" />
+            </label>
+            <label>
+              <span>分类</span>
+              <input
+                name="category"
+                required
+                maxlength="80"
+                list="catalog-category-options"
+                placeholder="例如：Agent 平台"
+              />
+            </label>
+            <label class="catalog-form-wide">
+              <span>项目描述</span>
+              <textarea
+                name="description"
+                required
+                minlength="30"
+                maxlength="2000"
+                rows="5"
+                placeholder="说明项目解决什么问题、适合谁，以及最重要的能力边界。"
+              ></textarea>
+            </label>
+            <label>
+              <span>GitHub 链接</span>
+              <input name="repoUrl" type="url" placeholder="https://github.com/..." />
+            </label>
+            <label>
+              <span>官网链接</span>
+              <input name="websiteUrl" type="url" placeholder="https://..." />
+            </label>
+            <label>
+              <span>标签</span>
+              <input name="tags" required placeholder="agent, workflow, 开源" />
+              <small>用逗号分隔，至少 1 个</small>
+            </label>
+            <label>
+              <span>GitHub Stars（可选）</span>
+              <input name="githubStars" type="number" min="0" step="1" placeholder="由提交者填写，审核时核验" />
+            </label>
+            <label class="catalog-form-wide">
+              <span>使用场景</span>
+              <input name="useCases" placeholder="搭建企业知识库问答，编排客服智能体工作流" />
+              <small>用逗号分隔，最多 8 个</small>
+            </label>
+          </div>
+          <datalist id="catalog-category-options"></datalist>
+          <div class="catalog-form-footer">
+            <p>提交不代表收录。请确保你拥有项目资料与商标的发布权限。</p>
+            <button class="button button--primary" type="submit" id="catalog-submit-button">
+              <i data-lucide="send"></i>
+              <span>提交审核</span>
+            </button>
+          </div>
+          <div class="catalog-form-status" id="catalog-form-status" role="status" hidden></div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="catalog-footer">
+      <div>
+        <strong>拓域 · Rita</strong>
+        <span>© 2026 Yan Sihan</span>
+      </div>
+      <nav aria-label="目录相关声明">
+        <a href="./MCP.md">MCP 接入</a>
+        <a href="./admin.html">审核后台</a>
+        <a href="./PRICING.md">价格与额度</a>
+        <a href="./PRIVACY.md">隐私说明</a>
+        <a href="./TRADEMARK.md">商标政策</a>
+      </nav>
+    </footer>
+
+    <script src="./vendor/lucide.min.js"></script>
+    <script type="module" src="./catalog.js"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "tuoyu-ai-distribution",
+  "version": "0.1.0",
+  "private": true,
+  "description": "拓域：由 Rita 驱动的 AI 项目分发与搜索发现工作台",
+  "license": "Apache-2.0",
+  "author": "Yan Sihan",
+  "scripts": {
+    "start": "node server.js",
+    "mcp:catalog": "node src/mcp-server.js",
+    "check": "node --check app.js && node --check catalog.js && node --check admin.js && node --check server.js && node --check src/api.js && node --check src/mcp-server.js && node --check src/catalog/scoring.js && node --check src/catalog/seed.js && node --check src/catalog/store.js && node --check src/catalog/validation.js",
+    "test": "node --test test/catalog.test.js",
+    "test:catalog": "node --test test/catalog.test.js"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "keywords": [
+    "ai",
+    "ai-search",
+    "developer-tools",
+    "distribution",
+    "llm",
+    "open-source"
+  ]
+}

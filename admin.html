@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta
+      name="description"
+      content="拓域 MCP 工具目录审核后台，用于审核提交项目和管理推广标记。"
+    />
+    <title>拓域 MCP 目录审核后台</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./catalog.css" />
+    <link rel="stylesheet" href="./admin.css" />
+  </head>
+  <body class="admin-page">
+    <header class="catalog-topbar">
+      <a class="catalog-brand" href="./catalog.html" aria-label="返回工具目录">
+        <span class="brand-mark">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M7 23.5V8.5h8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M25 8.5v15h-8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M11 16h10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+            <circle cx="16" cy="16" r="2.7" fill="currentColor" />
+          </svg>
+        </span>
+        <span>
+          <strong>拓域 MCP · Admin</strong>
+          <small>REVIEW CONSOLE</small>
+        </span>
+      </a>
+      <nav class="catalog-topnav" aria-label="后台导航">
+        <a href="./catalog.html">返回目录</a>
+        <a href="./">工作台</a>
+        <button class="admin-header-logout" id="admin-logout" type="button" hidden>
+          <i data-lucide="log-out"></i>
+          退出
+        </button>
+      </nav>
+    </header>
+
+    <main class="admin-main">
+      <section class="admin-hero" aria-labelledby="admin-title">
+        <div>
+          <span class="catalog-kicker">HUMAN REVIEW REQUIRED</span>
+          <h1 id="admin-title">目录审核</h1>
+          <p>审核项目资料、核验指标，并控制已审核项目的推广标记。</p>
+        </div>
+        <div class="admin-boundary">
+          <i data-lucide="shield-alert"></i>
+          <div>
+            <strong>当前为本地管理后台</strong>
+            <span>Bearer Token 只保存在当前标签页会话中；正式部署需接入身份、权限和审计。</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-auth-panel" id="admin-auth-panel" aria-labelledby="admin-auth-title">
+        <div>
+          <span class="catalog-section-label">ADMIN ACCESS</span>
+          <h2 id="admin-auth-title">连接审核服务</h2>
+          <p>使用启动服务器时设置的 <code>TUOYU_ADMIN_TOKEN</code>。</p>
+        </div>
+        <form id="admin-auth-form">
+          <label>
+            <span>管理员 Token</span>
+            <input
+              id="admin-token-input"
+              name="token"
+              type="password"
+              required
+              minlength="16"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="输入仅本次会话使用的 Token"
+            />
+          </label>
+          <button class="button button--primary" type="submit" id="admin-connect-button">
+            <i data-lucide="key-round"></i>
+            <span>连接后台</span>
+          </button>
+        </form>
+        <div class="admin-message" id="admin-auth-message" role="status" hidden></div>
+      </section>
+
+      <section class="admin-dashboard" id="admin-dashboard" hidden aria-labelledby="admin-list-title">
+        <div class="admin-stats" aria-label="项目状态统计">
+          <div>
+            <span>待审核</span>
+            <strong id="admin-stat-pending">0</strong>
+          </div>
+          <div>
+            <span>已通过</span>
+            <strong id="admin-stat-approved">0</strong>
+          </div>
+          <div>
+            <span>已拒绝</span>
+            <strong id="admin-stat-rejected">0</strong>
+          </div>
+          <div>
+            <span>已暂停</span>
+            <strong id="admin-stat-paused">0</strong>
+          </div>
+          <div class="admin-stat-promoted">
+            <span>推广中</span>
+            <strong id="admin-stat-promoted">0</strong>
+          </div>
+        </div>
+
+        <div class="admin-list-shell">
+          <div class="admin-list-heading">
+            <div>
+              <span class="catalog-section-label">CATALOG RECORDS</span>
+              <h2 id="admin-list-title">项目记录</h2>
+            </div>
+            <button class="button button--quiet" id="admin-refresh" type="button">
+              <i data-lucide="refresh-cw"></i>
+              <span>刷新</span>
+            </button>
+          </div>
+
+          <div class="admin-filters">
+            <label class="catalog-search-field">
+              <i data-lucide="search"></i>
+              <span class="sr-only">搜索项目</span>
+              <input id="admin-search-input" type="search" placeholder="搜索名称、描述、分类或标签" />
+            </label>
+            <label class="catalog-select-field">
+              <span class="sr-only">审核状态</span>
+              <select id="admin-status-filter">
+                <option value="pending">待审核</option>
+                <option value="approved">已通过</option>
+                <option value="rejected">已拒绝</option>
+                <option value="paused">已暂停</option>
+                <option value="all">全部状态</option>
+              </select>
+            </label>
+            <span class="admin-record-count" id="admin-record-count">0 个项目</span>
+          </div>
+
+          <div class="admin-message" id="admin-list-message" role="status" hidden></div>
+          <div class="admin-tool-list" id="admin-tool-list" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="catalog-footer">
+      <div>
+        <strong>拓域 · Rita</strong>
+        <span>© 2026 Yan Sihan</span>
+      </div>
+      <nav aria-label="后台相关声明">
+        <a href="./MCP.md">MCP 接入</a>
+        <a href="./PRIVACY.md">隐私说明</a>
+        <a href="./TRADEMARK.md">商标政策</a>
+      </nav>
+    </footer>
+
+    <script src="./vendor/lucide.min.js"></script>
+    <script type="module" src="./admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+* text=auto eol=lf
+
+*.svg text eol=lf
+*.sqlite binary
+*.sqlite-shm binary
+*.sqlite-wal binary
