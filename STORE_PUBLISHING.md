@@ -1,12 +1,21 @@
 # Microsoft Store China Publishing Guide
 
-Updated: October 21, 2026
+Updated: October 22, 2026
 
 ## Current Status
 
-The project is currently a locally runnable web prototype. It has not been submitted to Microsoft Store and does not have an active Partner Center app identity, MSIX package, Store product ID, or subscription add-on ID.
+The project is currently a locally runnable, installable PWA. It has not been submitted to Microsoft Store and does not have an active Partner Center app identity, signed MSIX package, Store product ID, or subscription add-on ID.
 
 Therefore, the local plan preview cannot be used to claim that real subscriptions or a Store listing are complete. Without a Microsoft developer account, a Partner Center app identity, and certification materials, the repository alone cannot perform a direct publication.
+
+The PWA foundation now includes:
+
+- `manifest.webmanifest`
+- 192×192, 512×512, and maskable 512×512 PNG icons
+- A root-scope service worker
+- Offline fallback for the workspace and catalog shells
+- Explicit exclusion of `/api/`, `admin.html`, `admin.js`, and `admin.css` from offline caching
+- CSP support for the manifest and service worker
 
 ## Mandatory Prerequisites
 
@@ -14,7 +23,7 @@ Therefore, the local plan preview cannot be used to claim that real subscription
 | --- | --- | --- |
 | Microsoft developer account | Not confirmed | Complete individual or organization verification and confirm eligibility to publish in China |
 | Partner Center app | Not created | Reserve the app name and obtain Package Identity and Publisher ID |
-| Windows package | Not generated | Generate and sign a submittable MSIX/AppX or PWA package |
+| Windows package | Not generated | Generate and sign a submittable MSIX/AppX from the prepared PWA |
 | Public HTTPS service | Not deployed | Production domain, HTTPS, health checks, backup, and monitoring |
 | Privacy-policy URL | Not deployed | Publish `PRIVACY.md` at a stable public URL and add contact details |
 | Support page | Not established | Support email, issue reporting, privacy requests, and subscription-support workflow |
@@ -45,7 +54,7 @@ For the current web stack, first evaluate the official process for packaging a P
 
 Never commit Partner Center passwords, code-signing certificates, private keys, or Store access tokens to the Git repository.
 
-## 3. Store Products and Subscriptions
+## 3. Store Products, Subscriptions, and Payout
 
 Before charging real customers:
 
@@ -57,6 +66,16 @@ Before charging real customers:
 6. Clearly disclose price, billing period, renewal, cancellation, refund, and trial rules on the product page.
 7. Show the final tax-inclusive CNY price before purchase, subject to the actual Store checkout page.
 8. Test purchase, duplicate purchase, restore purchase, cancellation, expiry, refund, offline launch, and network recovery.
+
+For revenue settlement:
+
+1. Complete the Partner Center developer identity verification.
+2. Complete the payout profile, tax profile, and bank-account verification.
+3. Confirm that the account role can access Earnings and payout reports.
+4. Track gross customer orders and Microsoft's net earnings separately.
+5. Reconcile store fees, tax, refunds, chargebacks, holds, and bank receipts.
+
+Microsoft does not send the customer's gross payment directly to an ordinary personal bank account. It posts payable developer earnings in Partner Center and pays the verified account after the applicable requirements and payment cycle are met. See [STORE_PAYOUT.md](./STORE_PAYOUT.md).
 
 The `localStorage` plan switcher in the current app must remain labeled as a local preview until all of the above is operational.
 

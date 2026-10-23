@@ -27,16 +27,16 @@ function escapeHTML(value) {
 }
 
 function formatNumber(value) {
-  if (value === null || value === undefined || value === "") return "未提供";
-  return Number.isFinite(Number(value)) ? new Intl.NumberFormat("zh-CN").format(value) : "未提供";
+  if (value === null || value === undefined || value === "") return "Not available";
+  return Number.isFinite(Number(value)) ? new Intl.NumberFormat("en-US").format(value) : "Not available";
 }
 
 function formatDate(value) {
-  if (!value) return "未提供";
+  if (!value) return "Not available";
   const date = new Date(value);
   return Number.isNaN(date.getTime())
-    ? "未提供"
-    : new Intl.DateTimeFormat("zh-CN", {
+    ? "Not available"
+    : new Intl.DateTimeFormat("en-US", {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -49,13 +49,15 @@ function setLiveState(message, isError = false) {
 }
 
 function renderResults(results, query) {
-  resultCount.textContent = `${results.length} 个结果${query ? ` · ${query}` : " · 全部已审核项目"}`;
+  resultCount.textContent = `${results.length} result${results.length === 1 ? "" : "s"}${
+    query ? ` · ${query}` : " · All approved projects"
+  }`;
   if (!results.length) {
     resultsRegion.innerHTML = `
       <div class="catalog-empty">
         <i data-lucide="search-x"></i>
-        <strong>没有匹配的已审核项目</strong>
-        <span>尝试更短的关键词、全部分类，或提交一个新的项目。</span>
+        <strong>No approved projects match</strong>
+        <span>Try a shorter keyword, all categories, or submit a new project.</span>
       </div>
     `;
     refreshIcons();
@@ -69,7 +71,7 @@ function renderResults(results, query) {
           ? `<a href="${escapeHTML(tool.links.repository)}" target="_blank" rel="noreferrer"><i data-lucide="github"></i>GitHub</a>`
           : "",
         tool.links.website
-          ? `<a href="${escapeHTML(tool.links.website)}" target="_blank" rel="noreferrer"><i data-lucide="external-link"></i>官网</a>`
+          ? `<a href="${escapeHTML(tool.links.website)}" target="_blank" rel="noreferrer"><i data-lucide="external-link"></i>Website</a>`
           : "",
       ].join("");
       return `
@@ -79,7 +81,7 @@ function renderResults(results, query) {
               <h3>${escapeHTML(tool.name)}</h3>
               <span class="catalog-tool-category">${escapeHTML(tool.category)}</span>
             </div>
-            ${tool.isPaidPlacement ? `<span class="catalog-placement-badge">推广</span>` : `<span class="catalog-score"><strong>${Math.round(tool.ranking.finalScore)}</strong><span>匹配分</span></span>`}
+            ${tool.isPaidPlacement ? `<span class="catalog-placement-badge">Paid promotion</span>` : `<span class="catalog-score"><strong>${Math.round(tool.ranking.finalScore)}</strong><span>Match score</span></span>`}
           </div>
           <p>${escapeHTML(tool.description)}</p>
           <div class="catalog-tool-tags">
@@ -87,10 +89,10 @@ function renderResults(results, query) {
           </div>
           <div class="catalog-tool-card-footer">
             <span class="catalog-tool-stats">
-              ${tool.isPaidPlacement ? `推广前 ${tool.ranking.baseScore.toFixed(1)} 分 · 加权 +${tool.ranking.paidBoost}` : `基础 ${tool.ranking.baseScore.toFixed(1)} 分`}<br />
-              GitHub Stars：${escapeHTML(formatNumber(tool.github.stars))} · 更新：${escapeHTML(formatDate(tool.github.lastUpdated))}
+              ${tool.isPaidPlacement ? `Before promotion: ${tool.ranking.baseScore.toFixed(1)} · Boost +${tool.ranking.paidBoost}` : `Base score: ${tool.ranking.baseScore.toFixed(1)}`}<br />
+              GitHub Stars: ${escapeHTML(formatNumber(tool.github.stars))} · Updated: ${escapeHTML(formatDate(tool.github.lastUpdated))}
             </span>
-            <div class="catalog-tool-links">${links || "<span>暂无外链</span>"}</div>
+            <div class="catalog-tool-links">${links || "<span>No external links</span>"}</div>
           </div>
         </article>
       `;
@@ -106,23 +108,23 @@ async function searchCatalog() {
   if (categorySelect.value) params.set("category", categorySelect.value);
   params.set("includeSponsored", String(sponsoredInput.checked));
   params.set("limit", "20");
-  setLiveState("正在搜索目录");
+  setLiveState("Searching catalog");
   try {
     const response = await fetch(`/api/catalog/search?${params}`);
     const payload = await response.json();
-    if (!response.ok) throw new Error(payload.message || "目录搜索失败");
+    if (!response.ok) throw new Error(payload.message || "Catalog search failed");
     renderResults(payload.results, query);
-    setLiveState("目录在线");
+    setLiveState("Catalog online");
   } catch (error) {
-    resultCount.textContent = "搜索失败";
+    resultCount.textContent = "Search failed";
     resultsRegion.innerHTML = `
       <div class="catalog-empty">
         <i data-lucide="server-off"></i>
-        <strong>暂时无法连接目录服务</strong>
+        <strong>Unable to connect to the catalog service</strong>
         <span>${escapeHTML(error.message)}</span>
       </div>
     `;
-    setLiveState("目录离线", true);
+    setLiveState("Catalog offline", true);
     refreshIcons();
   }
 }
@@ -131,7 +133,7 @@ async function loadCategories() {
   try {
     const response = await fetch("/api/catalog/categories");
     const payload = await response.json();
-    if (!response.ok) throw new Error(payload.message || "分类读取失败");
+    if (!response.ok) throw new Error(payload.message || "Unable to load categories");
     for (const category of payload.categories) {
       categorySelect.insertAdjacentHTML(
         "beforeend",
@@ -143,13 +145,13 @@ async function loadCategories() {
       );
     }
   } catch {
-    setLiveState("分类暂不可用", true);
+    setLiveState("Categories unavailable", true);
   }
 }
 
 function splitList(value) {
   return String(value || "")
-    .split(/[,，\n]/)
+    .split(/[,;\n]/)
     .map((item) => item.trim())
     .filter(Boolean);
 }
@@ -176,7 +178,7 @@ async function submitTool(event) {
     githubStars: data.get("githubStars") || null,
   };
   button.disabled = true;
-  setFormStatus("正在提交并执行基础校验...");
+  setFormStatus("Submitting and running basic validation...");
   try {
     const response = await fetch("/api/catalog/submissions", {
       method: "POST",
@@ -185,11 +187,11 @@ async function submitTool(event) {
     });
     const payload = await response.json();
     if (!response.ok) {
-      const details = payload.details?.length ? `：${payload.details.join("；")}` : "";
-      throw new Error(`${payload.message || "提交失败"}${details}`);
+      const details = payload.details?.length ? `: ${payload.details.join("; ")}` : "";
+      throw new Error(`${payload.message || "Submission failed"}${details}`);
     }
     setFormStatus(
-      `已提交“${payload.submission.name}”。当前状态：待审核，审核通过前不会出现在 MCP 搜索结果中。`,
+      `Submitted "${payload.submission.name}". Current status: pending review. It will not appear in MCP search results until approved.`,
     );
     submitForm.reset();
   } catch (error) {

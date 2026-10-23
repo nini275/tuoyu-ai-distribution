@@ -7,12 +7,20 @@ const billingPeriodFormatter = new Intl.DateTimeFormat("en-US", {
   month: "2-digit",
 });
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch((error) => {
+      console.warn("TuoYu offline shell registration failed.", error);
+    });
+  });
+}
+
 const billingPlans = [
   {
     id: "free",
-    name: "免费版",
+    name: "Free",
     eyebrow: "START",
-    description: "先验证项目定位与首发路径。",
+    description: "Validate your project positioning and launch path.",
     monthlyPrice: 0,
     yearlyPrice: 0,
     limits: {
@@ -21,17 +29,17 @@ const billingPlans = [
       indexPackages: 1,
     },
     features: [
-      "1 个自建活跃项目",
-      "每月 20 份渠道内容",
-      "每月 1 份 AI 索引包",
-      "14 个渠道匹配与人工发布",
+      "1 active workspace project",
+      "20 channel drafts per month",
+      "1 AI discovery package per month",
+      "14 channel matches with manual publishing",
     ],
   },
   {
     id: "creator",
-    name: "创作者版",
+    name: "Creator",
     eyebrow: "CREATOR",
-    description: "适合持续发布产品、模型与开源版本。",
+    description: "For teams shipping product, model, and open-source releases.",
     monthlyPrice: 49,
     yearlyPrice: 399,
     featured: true,
@@ -41,17 +49,17 @@ const billingPlans = [
       indexPackages: Number.POSITIVE_INFINITY,
     },
     features: [
-      "10 个自建活跃项目",
-      "每月 300 份渠道内容",
-      "AI 索引包不限量",
-      "完整审核、排期与发布记录",
+      "10 active workspace projects",
+      "300 channel drafts per month",
+      "Unlimited AI discovery packages",
+      "Review, scheduling, and publishing history",
     ],
   },
   {
     id: "pro",
-    name: "专业版",
+    name: "Pro",
     eyebrow: "PRO",
-    description: "面向高频发布与多项目运营。",
+    description: "For high-volume releases and multi-project operations.",
     monthlyPrice: 149,
     yearlyPrice: 1299,
     limits: {
@@ -60,10 +68,10 @@ const billingPlans = [
       indexPackages: Number.POSITIVE_INFINITY,
     },
     features: [
-      "50 个自建活跃项目",
-      "每月 2,000 份渠道内容",
-      "AI 索引包不限量",
-      "适合批量分发与长期运营",
+      "50 active workspace projects",
+      "2,000 channel drafts per month",
+      "Unlimited AI discovery packages",
+      "Built for batch distribution and long-term operations",
     ],
   },
 ];
@@ -72,101 +80,101 @@ const channelCatalog = [
   {
     id: "huggingface",
     name: "Hugging Face",
-    group: "模型与 Agent",
-    description: "模型卡、Spaces 与开源 AI 项目曝光",
-    audiences: ["AI 工程师", "研究者"],
-    reach: "全球 AI 开发者",
+    group: "Models & Agents",
+    description: "Model cards, Spaces, and open-source AI project visibility",
+    audiences: ["AI engineers", "Researchers"],
+    reach: "Global AI developers",
     mode: "api",
     color: "#8a6b16",
     bg: "#fff5cf",
     fit: 94,
-    channelFormat: "模型卡 / Space 描述",
+    channelFormat: "Model card / Space description",
   },
   {
     id: "github",
     name: "GitHub",
-    group: "开发者社区",
-    description: "通过 Release、README 与组织动态分发",
-    audiences: ["工程师", "开源开发者"],
-    reach: "全球开发者",
+    group: "Developer communities",
+    description: "Distribute through releases, README files, and organization updates",
+    audiences: ["Engineers", "Open-source developers"],
+    reach: "Global developers",
     mode: "api",
     color: "#303a36",
     bg: "#eef1ef",
     fit: 92,
-    channelFormat: "Release 说明",
+    channelFormat: "Release notes",
   },
   {
     id: "producthunt",
     name: "Product Hunt",
-    group: "新品目录",
-    description: "面向早期用户与工具猎手的首发阵地",
-    audiences: ["产品经理", "早期用户"],
-    reach: "全球产品社区",
+    group: "Launch directories",
+    description: "A launch channel for early adopters and tool hunters",
+    audiences: ["Product managers", "Early adopters"],
+    reach: "Global product community",
     mode: "manual",
     color: "#c14b2e",
     bg: "#fff0ea",
     fit: 84,
-    channelFormat: "首发帖",
+    channelFormat: "Launch post",
   },
   {
     id: "modelscope",
-    name: "ModelScope 魔搭",
-    group: "模型与 Agent",
-    description: "中文模型与 Space 的展示和评测入口",
-    audiences: ["AI 工程师", "研究者"],
-    reach: "中文 AI 开发者",
+    name: "ModelScope",
+    group: "Models & Agents",
+    description: "Discovery and evaluation channel for models and Spaces",
+    audiences: ["AI engineers", "Researchers"],
+    reach: "AI developers",
     mode: "api",
     color: "#6751ac",
     bg: "#f0ecff",
     fit: 90,
-    channelFormat: "模型介绍",
+    channelFormat: "Model overview",
   },
   {
     id: "poe",
     name: "Poe",
-    group: "模型与 Agent",
-    description: "面向 Bot 与 AI 应用消费者的分发平台",
-    audiences: ["AI 用户", "创作者"],
-    reach: "AI 消费者",
+    group: "Models & Agents",
+    description: "Distribution platform for bots and AI application users",
+    audiences: ["AI users", "Creators"],
+    reach: "AI consumers",
     mode: "assisted",
     color: "#5541a2",
     bg: "#f1edff",
     fit: 79,
-    channelFormat: "Bot 简介",
+    channelFormat: "Bot profile",
   },
   {
     id: "coze",
-    name: "扣子 Coze",
-    group: "模型与 Agent",
-    description: "Agent、Bot 与工作流的商店式分发",
-    audiences: ["业务用户", "AI 创作者"],
-    reach: "中文 AI 用户",
+    name: "Coze",
+    group: "Models & Agents",
+    description: "App-store-style distribution for agents, bots, and workflows",
+    audiences: ["Business users", "AI creators"],
+    reach: "AI users",
     mode: "assisted",
     color: "#216959",
     bg: "#e5f4ef",
     fit: 82,
-    channelFormat: "Agent 介绍",
+    channelFormat: "Agent overview",
   },
   {
     id: "dify",
     name: "Dify Marketplace",
-    group: "模型与 Agent",
-    description: "插件、模板与工作流进入企业 AI 生态",
-    audiences: ["AI 工程师", "企业团队"],
-    reach: "企业 AI 用户",
+    group: "Models & Agents",
+    description: "Bring plugins, templates, and workflows into enterprise AI",
+    audiences: ["AI engineers", "Enterprise teams"],
+    reach: "Enterprise AI users",
     mode: "manual",
     color: "#2469a5",
     bg: "#e8f2fb",
     fit: 76,
-    channelFormat: "插件说明",
+    channelFormat: "Plugin documentation",
   },
   {
     id: "hackernews",
     name: "Hacker News",
-    group: "开发者社区",
-    description: "技术叙事与真实结果驱动的高质量讨论",
-    audiences: ["工程师", "创始人"],
-    reach: "技术决策者",
+    group: "Developer communities",
+    description: "High-quality technical discussion driven by real results",
+    audiences: ["Engineers", "Founders"],
+    reach: "Technical decision-makers",
     mode: "api",
     color: "#d85d27",
     bg: "#fff0e8",
@@ -176,80 +184,80 @@ const channelCatalog = [
   {
     id: "v2ex",
     name: "V2EX",
-    group: "开发者社区",
-    description: "中文开发者社区分享与产品反馈",
-    audiences: ["工程师", "独立开发者"],
-    reach: "中文技术社区",
+    group: "Developer communities",
+    description: "Developer discussion, project sharing, and product feedback",
+    audiences: ["Engineers", "Independent developers"],
+    reach: "Developer community",
     mode: "api",
     color: "#46555d",
     bg: "#eef2f4",
     fit: 80,
-    channelFormat: "分享主题",
+    channelFormat: "Discussion post",
   },
   {
     id: "jike",
-    name: "即刻",
-    group: "中文内容",
-    description: "用动态和产品故事触达中文科技人群",
-    audiences: ["产品经理", "科技从业者"],
-    reach: "中文科技社区",
+    name: "Jike",
+    group: "Community channels",
+    description: "Reach technology communities through updates and product stories",
+    audiences: ["Product managers", "Technology professionals"],
+    reach: "Technology community",
     mode: "assisted",
     color: "#c99600",
     bg: "#fff8d9",
     fit: 74,
-    channelFormat: "社区动态",
+    channelFormat: "Community update",
   },
   {
     id: "zhihu",
-    name: "知乎",
-    group: "中文内容",
-    description: "以问题与深度解析建立长期搜索入口",
-    audiences: ["专业用户", "中文用户"],
-    reach: "中文搜索用户",
+    name: "Zhihu",
+    group: "Community channels",
+    description: "Build long-term search visibility with questions and in-depth analysis",
+    audiences: ["Professional users", "Knowledge seekers"],
+    reach: "Search users",
     mode: "manual",
     color: "#2269b6",
     bg: "#e9f2fc",
     fit: 69,
-    channelFormat: "问答文章",
+    channelFormat: "Q&A article",
   },
   {
     id: "futurepedia",
     name: "Futurepedia",
-    group: "新品目录",
-    description: "AI 工具目录，适合明确的搜索型需求",
-    audiences: ["AI 用户", "产品经理"],
-    reach: "全球 AI 用户",
+    group: "Launch directories",
+    description: "AI tool directory for high-intent search use cases",
+    audiences: ["AI users", "Product managers"],
+    reach: "Global AI users",
     mode: "manual",
     color: "#558139",
     bg: "#edf7e7",
     fit: 77,
-    channelFormat: "工具收录",
+    channelFormat: "Tool listing",
   },
   {
     id: "theresanaiforthat",
     name: "There's An AI For That",
-    group: "新品目录",
-    description: "以任务场景为核心的 AI 工具发现平台",
-    audiences: ["AI 用户", "内容创作者"],
-    reach: "全球 AI 用户",
+    group: "Launch directories",
+    description: "Task-focused AI tool discovery platform",
+    audiences: ["AI users", "Content creators"],
+    reach: "Global AI users",
     mode: "manual",
     color: "#8a4724",
     bg: "#fff1e9",
     fit: 72,
-    channelFormat: "任务描述",
+    channelFormat: "Task description",
   },
   {
     id: "xiaohongshu",
-    name: "小红书",
-    group: "中文内容",
-    description: "以真实使用场景触达创作者与泛用户",
-    audiences: ["创作者", "泛用户"],
-    reach: "中文内容用户",
+    name: "Xiaohongshu",
+    group: "Community channels",
+    description: "Reach creators and general users through real use cases",
+    audiences: ["Creators", "General users"],
+    reach: "Content community",
     mode: "assisted",
     color: "#c83d45",
     bg: "#ffedee",
     fit: 64,
-    channelFormat: "场景笔记",
+    channelFormat: "Use-case note",
   },
 ];
 
@@ -259,10 +267,10 @@ const demoProjects = [
     id: "agentloom",
     name: "Agentloom",
     url: "https://github.com/agentloom/agentloom",
-    tagline: "把多智能体协作变成一组可测试、可观测的工作流原语。",
-    type: "开源框架",
-    stage: "正式发布",
-    audience: "AI 工程师、Agent 开发者",
+    tagline: "Observable workflow primitives for testable multi-agent collaboration.",
+    type: "Open-source framework",
+    stage: "General availability",
+    audience: "AI engineers, agent developers",
     color: "#205fd7",
     score: 91,
     channels: ["github", "huggingface", "hackernews", "v2ex", "producthunt"],
@@ -274,10 +282,10 @@ const demoProjects = [
     id: "lumen-3b",
     name: "Lumen 3B",
     url: "https://huggingface.co/lumen-ai/lumen-3b",
-    tagline: "为中文端侧设备设计的轻量多模态模型，2.8GB 显存可运行。",
-    type: "基础模型",
-    stage: "开源首发",
-    audience: "模型研究者、端侧 AI 开发者",
+    tagline: "A lightweight multimodal model for edge devices that runs with 2.8 GB of VRAM.",
+    type: "Foundation model",
+    stage: "Open-source launch",
+    audience: "Model researchers, edge AI developers",
     color: "#167457",
     score: 87,
     channels: ["huggingface", "modelscope", "github", "hackernews", "zhihu"],
@@ -292,7 +300,7 @@ const demoAssets = [
     id: "asset-1",
     projectId: "agentloom",
     channelId: "github",
-    title: "Agentloom v1.0：可观测的多智能体工作流原语",
+    title: "Agentloom v1.0: Observable workflow primitives for multi-agent systems",
     body:
       "Agentloom v1.0 is now available.\n\nWe built Agentloom for teams that need multi-agent systems to behave less like a demo and more like production software. The release includes deterministic graph execution, per-step tracing, replayable runs, and provider-neutral tool adapters.\n\nHighlights:\n- Typed workflow graphs with retry and fallback policies\n- OpenTelemetry-compatible traces for every agent step\n- Local replay for failed runs\n- First-class support for Python and TypeScript\n\nTry the quickstart or open an issue with a trace bundle if something breaks.",
     tags: [],
@@ -314,9 +322,9 @@ const demoAssets = [
     id: "asset-3",
     projectId: "lumen-3b",
     channelId: "huggingface",
-    title: "Lumen-3B：轻量中文多模态基础模型",
+    title: "Lumen-3B: A lightweight multimodal foundation model",
     body:
-      "Lumen-3B 是为中文端侧场景训练的轻量多模态模型，重点优化低显存推理、中文图文理解与结构化输出。\n\n模型支持图像问答、文档理解与轻量 OCR 辅助任务。通过 4-bit 量化，可在约 2.8GB 显存下运行。发布包包含推理示例、评测卡片与部署说明。\n\n适合设备端知识库、截图理解与离线辅助等场景。建议在生产部署前使用你的业务样本完成二次评测。",
+      "Lumen-3B is a lightweight multimodal model trained for edge deployments. It focuses on low-memory inference, image-text understanding, and structured output.\n\nThe model supports visual question answering, document understanding, and lightweight OCR assistance. With 4-bit quantization, it can run with about 2.8 GB of VRAM. The release package includes inference examples, an evaluation card, and deployment notes.\n\nIt is designed for on-device knowledge bases, screenshot understanding, and offline assistance. Run a second evaluation with your own production samples before deployment.",
     tags: ["multimodal", "chinese", "edge-ai"],
     status: "scheduled",
     createdAt: "2026-10-19T04:00:00.000Z",
@@ -366,18 +374,18 @@ const defaultState = {
 let state = loadState();
 let currentView = "overview";
 let activeProjectId = state.projects[0]?.id || null;
-let projectFilter = "全部";
-let channelFilter = "全部";
+let projectFilter = "All";
+let channelFilter = "All";
 let channelQuery = "";
-let queueFilter = "全部";
+let queueFilter = "All";
 let discoveryQuery = "";
 let discoveryProbeResult = null;
 let studioSettings = {
   projectId: state.projects[0]?.id || "",
   channels: ["github", "huggingface", "hackernews"],
-  tone: "技术可信",
-  language: "自动",
-  goal: "首发",
+  tone: "Technical",
+  language: "Auto",
+  goal: "Launch",
 };
 let commandFocus = 0;
 
@@ -547,7 +555,7 @@ function getBillingSnapshot() {
 }
 
 function formatUsageLimit(value) {
-  return Number.isFinite(value) ? new Intl.NumberFormat("zh-CN").format(value) : "不限";
+  return Number.isFinite(value) ? new Intl.NumberFormat("en-US").format(value) : "Unlimited";
 }
 
 function getRemainingUsage(limit, used) {
@@ -573,14 +581,14 @@ function updateProfileSummary() {
   const snapshot = getBillingSnapshot();
   const sourceLabel =
     state.billing.source === "trial"
-      ? "专业版试用"
+      ? "Pro trial"
       : state.billing.source === "preview"
-        ? `${snapshot.plan.name} · 本地预览`
+        ? `${snapshot.plan.name} · Local preview`
         : snapshot.plan.name;
   profileLabel.textContent =
     snapshot.plan.id === "free"
-      ? `${sourceLabel} · 本月剩 ${formatUsageLimit(snapshot.remaining.contentVersions)} 份内容`
-      : `${sourceLabel} · ${state.billing.interval === "yearly" ? "年付" : "月付"}`;
+      ? `${sourceLabel} · ${formatUsageLimit(snapshot.remaining.contentVersions)} drafts left this month`
+      : `${sourceLabel} · ${state.billing.interval === "yearly" ? "Yearly" : "Monthly"}`;
 }
 
 function openBilling(context = "account", options = {}) {
@@ -609,22 +617,22 @@ function renderBillingModal() {
     currentPlan.id === "free"
       ? "¥0"
       : `${formatCurrency(currentPlan[state.billing.interval === "yearly" ? "yearlyPrice" : "monthlyPrice"])}/${
-          state.billing.interval === "yearly" ? "年" : "月"
+          state.billing.interval === "yearly" ? "year" : "month"
         }`;
 
   billingModalContent.innerHTML = `
     <div class="billing-modal-header">
       <div>
         <span class="eyebrow">PLAN &amp; USAGE</span>
-        <h2 id="billing-modal-title">套餐与用量</h2>
-        <p>额度按北京时间自然月重置。当前为本地预览；正式发布后的扣款、续订与退款由 Microsoft Store 处理。</p>
+        <h2 id="billing-modal-title">Plans and usage</h2>
+        <p>Usage resets each calendar month in the Asia/Shanghai time zone. This is a local preview; billing, renewals, and refunds after public release will be handled by Microsoft Store.</p>
       </div>
-      <button class="icon-button" type="button" data-close-modal aria-label="关闭">${icon("x")}</button>
+      <button class="icon-button" type="button" data-close-modal aria-label="Close">${icon("x")}</button>
     </div>
     <div class="billing-modal-body">
       ${renderBillingContextAlert(snapshot)}
 
-      <section class="billing-current" aria-label="当前套餐">
+      <section class="billing-current" aria-label="Current plan">
         <div class="billing-current-copy">
           <span class="billing-source-badge">${escapeHTML(getBillingSourceLabel())}</span>
           <div>
@@ -636,8 +644,8 @@ function renderBillingModal() {
           <strong>${escapeHTML(currentPrice)}</strong>
           <span>${
             state.billing.source === "trial"
-              ? `免费试用中，剩余 ${trialDays} 天`
-              : `当前周期：${escapeHTML(periodLabel)}`
+              ? `Free trial · ${trialDays} days remaining`
+              : `Current period: ${escapeHTML(periodLabel)}`
           }</span>
         </div>
       </section>
@@ -645,27 +653,27 @@ function renderBillingModal() {
       <section class="billing-usage" aria-labelledby="billing-usage-title">
         <div class="billing-section-heading">
           <div>
-            <h3 id="billing-usage-title">本月用量</h3>
-            <p>演示项目不占额度；已有内容不会因降级被删除。</p>
+            <h3 id="billing-usage-title">Usage this month</h3>
+            <p>Demo projects do not count toward limits. Existing content is never deleted when you downgrade.</p>
           </div>
           <span>${escapeHTML(periodLabel)}</span>
         </div>
         <div class="billing-usage-grid">
-          ${renderBillingUsageItem("boxes", "自建项目", snapshot.billableProjects, currentPlan.limits.projects, "演示项目已排除")}
-          ${renderBillingUsageItem("file-text", "渠道内容", state.billing.usage.contentVersions, currentPlan.limits.contentVersions, "每个成功生成的渠道版本计 1 份")}
-          ${renderBillingUsageItem("file-code-2", "AI 索引包", state.billing.usage.indexPackages, currentPlan.limits.indexPackages, "每次生成或重新生成计 1 份")}
+          ${renderBillingUsageItem("boxes", "Workspace projects", snapshot.billableProjects, currentPlan.limits.projects, "Demo projects excluded")}
+          ${renderBillingUsageItem("file-text", "Channel drafts", state.billing.usage.contentVersions, currentPlan.limits.contentVersions, "Each successfully generated channel draft counts as one")}
+          ${renderBillingUsageItem("file-code-2", "AI discovery packages", state.billing.usage.indexPackages, currentPlan.limits.indexPackages, "Each generation or regeneration counts as one")}
         </div>
       </section>
 
       <section class="billing-plans-section" aria-labelledby="billing-plans-title">
         <div class="billing-plan-heading">
           <div>
-            <h3 id="billing-plans-title">选择适合发布节奏的套餐</h3>
-            <p>年付按 10 个月计价。降级后仍可访问已有项目，但超限操作会暂停。</p>
+            <h3 id="billing-plans-title">Choose a plan that matches your release cadence</h3>
+            <p>Yearly billing is priced at 10 months. After a downgrade, existing projects remain accessible, but actions above the new limits are paused.</p>
           </div>
-          <div class="billing-interval-toggle" role="group" aria-label="计费周期">
-            <button type="button" data-billing-interval="monthly" class="${billingPreviewInterval === "monthly" ? "is-active" : ""}">月付</button>
-            <button type="button" data-billing-interval="yearly" class="${billingPreviewInterval === "yearly" ? "is-active" : ""}">年付 · 省 2 个月</button>
+          <div class="billing-interval-toggle" role="group" aria-label="Billing interval">
+            <button type="button" data-billing-interval="monthly" class="${billingPreviewInterval === "monthly" ? "is-active" : ""}">Monthly</button>
+            <button type="button" data-billing-interval="yearly" class="${billingPreviewInterval === "yearly" ? "is-active" : ""}">Yearly · Save 2 months</button>
           </div>
         </div>
         <div class="billing-plan-grid">
@@ -676,8 +684,8 @@ function renderBillingModal() {
       <div class="billing-store-note">
         <span>${icon("shield-check")}</span>
         <div>
-          <strong>本地原型预览，不会产生真实扣款</strong>
-          <p>正式发布后，套餐购买与续订将通过 Microsoft Store 完成。当前切换只用于验证额度和界面，Store 商品 ID 与购买凭证核验尚未接入。详见 <a href="./SUBSCRIPTION_TERMS.md">订阅条款</a> 与 <a href="./PRIVACY.md">隐私说明</a>。</p>
+          <strong>Local prototype preview. No real charge will be made.</strong>
+          <p>After public release, plan purchases and renewals will be completed through Microsoft Store. The current switch only validates limits and interface behavior; Store product IDs and purchase receipt verification are not connected yet. See the <a href="./SUBSCRIPTION_TERMS.md">Subscription Terms</a> and <a href="./PRIVACY.md">Privacy Notice</a>.</p>
         </div>
       </div>
     </div>
@@ -689,19 +697,19 @@ function renderBillingContextAlert(snapshot) {
   if (billingContext === "account") return "";
   const messages = {
     projects: {
-      title: "项目额度已用完",
-      detail: `${snapshot.plan.name}最多管理 ${formatUsageLimit(snapshot.plan.limits.projects)} 个自建项目。已有项目不会被删除。`,
+      title: "Project limit reached",
+      detail: `${snapshot.plan.name} supports up to ${formatUsageLimit(snapshot.plan.limits.projects)} workspace projects. Existing projects will not be deleted.`,
     },
     content: {
-      title: "渠道内容额度不足",
+      title: "Not enough channel draft credits",
       detail:
         billingContextNeed > 0
-          ? `本次需要 ${billingContextNeed} 份，本月仅剩 ${formatUsageLimit(snapshot.remaining.contentVersions)} 份。未生成的内容不会扣除额度。`
-          : `本月仅剩 ${formatUsageLimit(snapshot.remaining.contentVersions)} 份渠道内容。`,
+          ? `This action needs ${billingContextNeed} credits, but only ${formatUsageLimit(snapshot.remaining.contentVersions)} remain this month. Credits are not deducted for failed generations.`
+          : `Only ${formatUsageLimit(snapshot.remaining.contentVersions)} channel draft credits remain this month.`,
     },
     discovery: {
-      title: "AI 索引包额度已用完",
-      detail: `${snapshot.plan.name}每月可生成 ${formatUsageLimit(snapshot.plan.limits.indexPackages)} 份索引包。已有索引包仍可复制和使用。`,
+      title: "AI discovery package limit reached",
+      detail: `${snapshot.plan.name} includes ${formatUsageLimit(snapshot.plan.limits.indexPackages)} discovery packages per month. Existing packages can still be copied and used.`,
     },
   };
   const message = messages[billingContext];
@@ -731,14 +739,14 @@ function renderBillingUsageItem(iconName, label, used, limit, detail) {
         </div>
       </div>
       <div class="billing-usage-value">
-        <strong>${new Intl.NumberFormat("zh-CN").format(used)}</strong>
+        <strong>${new Intl.NumberFormat("en-US").format(used)}</strong>
         <span>/ ${escapeHTML(formatUsageLimit(limit))}</span>
       </div>
       <div class="billing-progress ${unlimited ? "is-unlimited" : ""}" aria-hidden="true">
         <i style="width:${percent}%"></i>
       </div>
       <small>${
-        unlimited ? "当前套餐不限量" : remaining > 0 ? `剩余 ${formatUsageLimit(remaining)}` : "本月额度已用完"
+        unlimited ? "Unlimited on this plan" : remaining > 0 ? `${formatUsageLimit(remaining)} remaining` : "Monthly limit reached"
       }</small>
     </article>
   `;
@@ -754,29 +762,29 @@ function renderBillingPlanCard(plan) {
     interval === "yearly" && plan.yearlyPrice > 0 ? plan.yearlyPrice / 12 : null;
   const annualSaving = plan.monthlyPrice * 12 - plan.yearlyPrice;
   const button = isCurrent
-    ? `<button class="button button--secondary" type="button" disabled>${icon("check")} 当前套餐</button>`
+    ? `<button class="button button--secondary" type="button" disabled>${icon("check")} Current plan</button>`
     : trialAvailable
-      ? `<button class="button button--primary" type="button" data-start-trial>${icon("gift")} 免费试用 7 天</button>`
-      : `<button class="button button--primary" type="button" data-preview-plan="${plan.id}">${icon("eye")} 预览${plan.id === "free" ? "免费版" : "此套餐"}</button>`;
+      ? `<button class="button button--primary" type="button" data-start-trial>${icon("gift")} Start 7-day free trial</button>`
+      : `<button class="button button--primary" type="button" data-preview-plan="${plan.id}">${icon("eye")} Preview ${plan.id === "free" ? "Free" : "plan"}</button>`;
 
   return `
     <article class="billing-plan-card ${plan.featured ? "billing-plan-card--featured" : ""}" data-billing-plan="${plan.id}">
       <div class="billing-plan-card-head">
         <span>${escapeHTML(plan.eyebrow)}</span>
-        ${isTrialPlan ? `<em>试用中</em>` : plan.featured ? `<em>推荐</em>` : ""}
+        ${isTrialPlan ? `<em>Trial active</em>` : plan.featured ? `<em>Recommended</em>` : ""}
       </div>
       <h4>${escapeHTML(plan.name)}</h4>
       <p>${escapeHTML(plan.description)}</p>
       <div class="billing-plan-price">
         <strong>${escapeHTML(formatCurrency(price))}</strong>
-        <span>${plan.id === "free" ? "永久" : interval === "yearly" ? "/ 年" : "/ 月"}</span>
+        <span>${plan.id === "free" ? "forever" : interval === "yearly" ? "/ year" : "/ month"}</span>
       </div>
       <small class="billing-plan-equivalent">${
         monthlyEquivalent
-          ? `约 ${escapeHTML(formatCurrency(monthlyEquivalent))}/月 · 比月付省 ${escapeHTML(formatCurrency(annualSaving))}`
+          ? `About ${escapeHTML(formatCurrency(monthlyEquivalent))}/month · Save ${escapeHTML(formatCurrency(annualSaving))} versus monthly`
           : plan.id === "free"
-            ? "无需付款"
-            : "可随时通过 Microsoft Store 取消续订"
+            ? "No payment required"
+            : "Cancel renewal anytime through Microsoft Store"
       }</small>
       <ul class="billing-plan-features">
         ${plan.features.map((feature) => `<li>${icon("check")}<span>${escapeHTML(feature)}</span></li>`).join("")}
@@ -785,8 +793,8 @@ function renderBillingPlanCard(plan) {
         ${button}
         ${
           plan.id !== "free"
-            ? `<button class="billing-store-pending" type="button" data-store-checkout>${icon("store")} Microsoft Store 订阅待接入</button>`
-            : `<span class="billing-plan-caption">适合验证首个作品</span>`
+            ? `<button class="billing-store-pending" type="button" data-store-checkout>${icon("store")} Microsoft Store subscription not connected</button>`
+            : `<span class="billing-plan-caption">Best for validating your first project</span>`
         }
       </div>
     </article>
@@ -794,23 +802,27 @@ function renderBillingPlanCard(plan) {
 }
 
 function formatCurrency(value) {
-  return `¥${new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 0 }).format(value)}`;
+  return `¥${new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(value)}`;
 }
 
 function formatBillingPeriod(periodKey) {
   const [year, month] = String(periodKey || "").split("-");
-  return year && month ? `${year} 年 ${Number(month)} 月` : "当前月份";
+  return year && month
+    ? new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", timeZone: "UTC" }).format(
+        new Date(Date.UTC(Number(year), Number(month) - 1, 1)),
+      )
+    : "Current month";
 }
 
 function getBillingSourceLabel() {
   return (
     {
-      free: "免费套餐",
-      preview: "本地套餐预览",
-      trial: "专业版试用",
-      "trial-expired": "试用已结束",
-      store: "Microsoft Store 订阅",
-    }[state.billing.source] || "免费套餐"
+      free: "Free plan",
+      preview: "Local plan preview",
+      trial: "Pro trial",
+      "trial-expired": "Trial ended",
+      store: "Microsoft Store subscription",
+    }[state.billing.source] || "Free plan"
   );
 }
 
@@ -827,14 +839,16 @@ function previewBillingPlan(planId) {
   updateProfileSummary();
   renderBillingModal();
   showToast(
-    `${plan.name}已设为本地预览`,
-    plan.id === "free" ? "额度已切换，未删除任何已有项目或内容" : "不会扣款；正式订阅仍需 Microsoft Store 结算",
+    `${plan.name} is now previewed locally`,
+    plan.id === "free"
+      ? "Limits were updated. No existing projects or content were deleted."
+      : "No charge was made. Public subscriptions will be billed through Microsoft Store.",
   );
 }
 
 function startProfessionalTrial() {
   if (state.billing.trialUsed) {
-    showToast("试用资格已使用", "每个工作区只能领取一次专业版 7 天试用");
+    showToast("Trial already used", "Each workspace can claim one 7-day Pro trial.");
     return;
   }
   const endsAt = new Date(Date.now() + 7 * 86_400_000).toISOString();
@@ -848,7 +862,7 @@ function startProfessionalTrial() {
   persist();
   updateProfileSummary();
   renderBillingModal();
-  showToast("专业版试用已开始", "7 天内可使用专业版额度，到期后自动回到免费版");
+  showToast("Your Pro trial has started", "Pro limits are available for 7 days. The workspace will return to Free when the trial ends.");
 }
 
 function ensureProjectCreationAllowed() {
@@ -886,10 +900,10 @@ function bindGlobalEvents() {
 
   document.querySelector("#search-trigger").addEventListener("click", openCommand);
   document.querySelector("#signal-button").addEventListener("click", () => {
-    showToast("渠道信号已刷新", "今日有 3 个渠道适合提高发布优先级");
+    showToast("Channel signals refreshed", "Three channels are strong candidates for a higher priority today.");
   });
   document.querySelector("#notification-button").addEventListener("click", () => {
-    showToast("没有新的阻塞项", "2 项内容等待你完成发布前审核");
+    showToast("No new blockers", "Two drafts are waiting for your pre-publish review.");
   });
   document.querySelector("#profile-button").addEventListener("click", () => openBilling("account"));
 
@@ -929,7 +943,7 @@ function handleDelegatedClick(event) {
 
   const storeCheckoutButton = event.target.closest("[data-store-checkout]");
   if (storeCheckoutButton) {
-    showToast("Microsoft Store 结算尚未连接", "当前仅验证套餐与额度，不会产生扣款");
+    showToast("Microsoft Store checkout is not connected", "This build only validates plans and limits. No charge will be made.");
     return;
   }
 
@@ -989,7 +1003,7 @@ function handleDelegatedClick(event) {
 
   const copyButton = event.target.closest("[data-copy-text]");
   if (copyButton) {
-    copyToClipboard(copyButton.dataset.copyText, "文案已复制");
+    copyToClipboard(copyButton.dataset.copyText, "Draft copied");
     return;
   }
 
@@ -1125,7 +1139,7 @@ function handleDelegatedInput(event) {
   }
   if (event.target.matches("#asset-content-input")) {
     const count = document.querySelector("#asset-character-count");
-    if (count) count.textContent = `${event.target.value.length} 字符`;
+    if (count) count.textContent = `${event.target.value.length} characters`;
   }
 }
 
@@ -1220,7 +1234,7 @@ function renderOverview() {
   const recommendedChannels = getRecommendedChannels(activeProject, 4);
   const projectAssets = getProjectAssets(activeProject?.id);
   const coverage = activeProject ? Math.round((activeProject.channels.length / channelCatalog.length) * 100) : 0;
-  const todayString = new Intl.DateTimeFormat("zh-CN", {
+  const todayString = new Intl.DateTimeFormat("en-US", {
     month: "long",
     day: "numeric",
     weekday: "short",
@@ -1229,16 +1243,16 @@ function renderOverview() {
   appContent.innerHTML = `
     ${viewHeader(
       "DISTRIBUTION DESK",
-      "发布工作台",
-      "Rita 判断项目该去哪里，为中英文 AI 生态生成真正适合渠道的内容。",
-      `${todayString} · 数据为本地实时状态`,
+      "Distribution desk",
+      "Rita identifies where each project belongs and creates channel-native content for the global AI ecosystem.",
+      `${todayString} · Live local workspace data`,
     )}
 
-    <section class="metrics-row" aria-label="关键指标">
-      ${metricCard("boxes", "活跃项目", state.projects.length, "2 个本周新增")}
-      ${metricCard("radio-tower", "已接渠道", channelCatalog.length, "8 个支持 API")}
-      ${metricCard("file-text", "内容资产", getAllAssets().length, "含待入队渠道版本")}
-      ${metricCard("circle-check", "待审核", reviewCount, scheduledCount ? `${scheduledCount} 项已排期` : "队列清空")}
+    <section class="metrics-row" aria-label="Key metrics">
+      ${metricCard("boxes", "Active projects", state.projects.length, "2 added this week")}
+      ${metricCard("radio-tower", "Connected channels", channelCatalog.length, "8 API-ready")}
+      ${metricCard("file-text", "Content assets", getAllAssets().length, "Includes drafts not yet queued")}
+      ${metricCard("circle-check", "In review", reviewCount, scheduledCount ? `${scheduledCount} scheduled` : "Queue clear")}
     </section>
 
     ${
@@ -1247,9 +1261,9 @@ function renderOverview() {
       <section class="overview-grid">
         <article class="panel focus-card">
           <div class="panel-header">
-            <div class="panel-title">${icon("rocket")}<h2>当前发布焦点</h2></div>
+            <div class="panel-title">${icon("rocket")}<h2>Current launch focus</h2></div>
             <button class="text-button" type="button" data-open-project="${activeProject.id}">
-              项目详情 ${icon("arrow-up-right")}
+              Project details ${icon("arrow-up-right")}
             </button>
           </div>
           <div class="focus-content">
@@ -1265,15 +1279,15 @@ function renderOverview() {
               <p class="focus-tagline">${escapeHTML(activeProject.tagline)}</p>
               <div class="focus-meta">
                 <span class="meta-tag">${icon("users")} ${escapeHTML(activeProject.audience)}</span>
-                <span class="meta-tag">${icon("radio-tower")} ${activeProject.channels.length} 个目标渠道</span>
-                <span class="meta-tag">${icon("files")} ${projectAssets.length} 份内容</span>
+                <span class="meta-tag">${icon("radio-tower")} ${activeProject.channels.length} target channels</span>
+                <span class="meta-tag">${icon("files")} ${projectAssets.length} content assets</span>
               </div>
               <div class="focus-actions">
                 <button class="button button--primary" type="button" data-view="studio">
-                  ${icon("wand-sparkles")} 生成渠道内容
+                  ${icon("wand-sparkles")} Generate channel content
                 </button>
                 <button class="button button--secondary" type="button" data-open-project="${activeProject.id}">
-                  ${icon("chart-no-axes-combined")} 查看分发画像
+                  ${icon("chart-no-axes-combined")} View distribution profile
                 </button>
               </div>
             </div>
@@ -1282,8 +1296,8 @@ function renderOverview() {
               <div class="score-row">
                 <div class="score-ring" style="--score:${activeProject.score}"><strong>${activeProject.score}</strong></div>
                 <div class="score-copy">
-                  <strong>发布就绪度</strong>
-                  <span>${activeProject.channels.length} 个渠道已匹配</span>
+                  <strong>Launch readiness</strong>
+                  <span>${activeProject.channels.length} channels matched</span>
                 </div>
               </div>
             </div>
@@ -1292,8 +1306,8 @@ function renderOverview() {
 
         <aside class="panel">
           <div class="panel-header">
-            <div class="panel-title">${icon("crosshair")}<h2>下一步动作</h2></div>
-            <span class="mode-badge mode-api">${reviewCount} 待处理</span>
+            <div class="panel-title">${icon("crosshair")}<h2>Next actions</h2></div>
+            <span class="mode-badge mode-api">${reviewCount} pending</span>
           </div>
           ${renderTodoList(activeProject)}
         </aside>
@@ -1302,9 +1316,9 @@ function renderOverview() {
       <section class="section-grid">
         <article class="panel">
           <div class="panel-header">
-            <div class="panel-title">${icon("radio-tower")}<h2>高匹配渠道</h2></div>
+            <div class="panel-title">${icon("radio-tower")}<h2>High-fit channels</h2></div>
             <button class="text-button" type="button" data-view="channels">
-              查看渠道库 ${icon("arrow-right")}
+              Browse channel library ${icon("arrow-right")}
             </button>
           </div>
           <div class="channel-list">
@@ -1313,9 +1327,9 @@ function renderOverview() {
         </article>
         <article class="panel">
           <div class="panel-header">
-            <div class="panel-title">${icon("list-checks")}<h2>发布队列</h2></div>
+            <div class="panel-title">${icon("list-checks")}<h2>Publishing queue</h2></div>
             <button class="text-button" type="button" data-view="queue">
-              全部队列 ${icon("arrow-right")}
+              View full queue ${icon("arrow-right")}
             </button>
           </div>
           ${renderCompactQueue()}
@@ -1325,11 +1339,11 @@ function renderOverview() {
       <section class="signal-strip">
         <span class="signal-icon">${icon("radar")}</span>
         <div class="signal-copy">
-          <strong>Rita 发现 3 个可提升动作</strong>
-          <span>${escapeHTML(activeProject.name)} 的 GitHub 与 Hugging Face 版本可以共用同一组演示素材；Product Hunt 建议延后 48 小时。</span>
+          <strong>Rita found 3 actions that could improve the launch</strong>
+          <span>The GitHub and Hugging Face versions of ${escapeHTML(activeProject.name)} can share the same demo assets. Product Hunt should launch 48 hours later.</span>
         </div>
         <button class="signal-link" type="button" data-view="channels">
-          查看建议 ${icon("arrow-up-right")}
+          Review recommendations ${icon("arrow-up-right")}
         </button>
       </section>
     `
@@ -1361,7 +1375,7 @@ function renderDistributionGraph(project) {
   ];
   const colors = ["#205fd7", "#167457", "#dc6046", "#a96c0d", "#6751ac"];
   return `
-    <div class="distribution-graph" role="img" aria-label="${escapeAttribute(project.name)} 的渠道覆盖图">
+    <div class="distribution-graph" role="img" aria-label="Channel coverage for ${escapeAttribute(project.name)}">
       <svg viewBox="0 0 260 170">
         <defs>
           <pattern id="dot-grid" width="12" height="12" patternUnits="userSpaceOnUse">
@@ -1400,36 +1414,36 @@ function renderTodoList(project) {
     pending && {
       iconName: "eye",
       variant: "amber",
-      title: `审核 ${getChannel(pending.channelId)?.name} 版本`,
-      detail: "检查价值主张、链接和发布规范",
-      time: "今天",
+      title: `Review the ${getChannel(pending.channelId)?.name} draft`,
+      detail: "Check the value proposition, links, and publishing rules",
+      time: "Today",
       action: "review",
       id: pending.id,
     },
     ready && {
       iconName: "calendar-clock",
       variant: "",
-      title: `为 ${getChannel(ready.channelId)?.name} 安排时间`,
-      detail: "内容就绪，等待选择发布窗口",
-      time: "本周",
+      title: `Schedule ${getChannel(ready.channelId)?.name}`,
+      detail: "The draft is ready for a publishing window",
+      time: "This week",
       action: "schedule",
       id: ready.id,
     },
     scheduled && {
       iconName: "circle-check",
       variant: "green",
-      title: `${getChannel(scheduled.channelId)?.name} 已进入排期`,
+      title: `${getChannel(scheduled.channelId)?.name} is scheduled`,
       detail: formatDateTime(scheduled.scheduledAt),
-      time: "已排期",
+      time: "Scheduled",
       action: "queue",
       id: scheduled.id,
     },
     {
       iconName: "plus",
       variant: "",
-      title: "补充一个渠道版本",
-      detail: "为下一个高匹配渠道生成独立文案",
-      time: "建议",
+      title: "Add another channel draft",
+      detail: "Create channel-native copy for the next high-fit channel",
+      time: "Suggested",
       action: "studio",
       id: "",
     },
@@ -1449,8 +1463,8 @@ function renderTodoList(project) {
               </div>
               ${
                 todo.action === "studio"
-                  ? `<button class="text-button" type="button" data-view="studio">生成 ${icon("arrow-right")}</button>`
-                  : `<button class="text-button" type="button" data-view="queue">去处理 ${icon("arrow-right")}</button>`
+                  ? `<button class="text-button" type="button" data-view="studio">Generate ${icon("arrow-right")}</button>`
+                  : `<button class="text-button" type="button" data-view="queue">Open queue ${icon("arrow-right")}</button>`
               }
             </div>
           `,
@@ -1472,12 +1486,12 @@ function renderChannelRow(channel) {
         <span>${escapeHTML(channel.group)}</span>
       </div>
       <span class="channel-reach">${escapeHTML(channel.reach)}</span>
-      <div class="fit-meter" aria-label="匹配度 ${channel.fit}">
+      <div class="fit-meter" aria-label="Match score ${channel.fit}">
         <span>${channel.fit}</span>
         <div class="fit-meter-track"><i style="width:${channel.fit}%"></i></div>
       </div>
       <button class="button button--small ${alreadyQueued ? "button--quiet" : "button--secondary"}" type="button" data-add-channel="${channel.id}" ${alreadyQueued ? "disabled" : ""}>
-        ${alreadyQueued ? icon("check") + " 已加入" : icon("plus") + " 加入"}
+        ${alreadyQueued ? icon("check") + " Added" : icon("plus") + " Add"}
       </button>
     </div>
   `;
@@ -1486,7 +1500,7 @@ function renderChannelRow(channel) {
 function renderCompactQueue() {
   const items = state.queue.filter((item) => item.status !== "published").slice(0, 4);
   if (!items.length) {
-    return `<div class="queue-empty">发布队列已经清空。</div>`;
+    return `<div class="queue-empty">The publishing queue is clear.</div>`;
   }
   return `
     <div class="todo-list">
@@ -1499,8 +1513,8 @@ function renderCompactQueue() {
             <div class="todo-item">
               <span class="channel-mark" style="--channel-color:${channel?.color};--channel-bg:${channel?.bg}">${escapeHTML(channel ? channelShort(channel) : "?")}</span>
               <div class="todo-copy">
-                <strong>${escapeHTML(asset?.title || "未命名内容")}</strong>
-                <span>${escapeHTML(project?.name || "未知项目")} · ${escapeHTML(channel?.name || "渠道")}</span>
+                <strong>${escapeHTML(asset?.title || "Untitled content")}</strong>
+                <span>${escapeHTML(project?.name || "Unknown project")} · ${escapeHTML(channel?.name || "Channel")}</span>
               </div>
               ${statusBadge(item.status)}
             </div>
@@ -1512,21 +1526,21 @@ function renderCompactQueue() {
 }
 
 function renderProjects() {
-  const filters = ["全部", "发布中", "待发布"];
+  const filters = ["All", "Publishing", "Not published"];
   const projects = state.projects.filter((project) => {
-    if (projectFilter === "全部") return true;
+    if (projectFilter === "All") return true;
     return getProjectWorkflowState(project.id) === projectFilter;
   });
 
   appContent.innerHTML = `
     ${viewHeader(
       "PROJECT PORTFOLIO",
-      "项目",
-      "每个项目都有独立的定位、目标受众和渠道组合。",
-      `${state.projects.length} 个项目正在管理`,
+      "Projects",
+      "Each project has its own positioning, target audience, and channel mix.",
+      `${state.projects.length} projects under management`,
     )}
     <div class="toolbar">
-      <div class="filter-group" aria-label="项目状态筛选">
+      <div class="filter-group" aria-label="Filter projects by status">
         ${filters
           .map(
             (filter) =>
@@ -1534,7 +1548,7 @@ function renderProjects() {
           )
           .join("")}
       </div>
-      <button class="button button--primary" type="button" data-open-intake>${icon("plus")} 接入新项目</button>
+      <button class="button button--primary" type="button" data-open-intake>${icon("plus")} Add project</button>
     </div>
     <section class="projects-grid">
       ${
@@ -1543,20 +1557,20 @@ function renderProjects() {
           : `
             <div class="empty-state projects-empty">
               <span class="empty-state-icon">${icon("list-filter")}</span>
-              <h2>当前筛选下没有项目</h2>
-              <p>切换到全部项目，或继续接入新的软件、模型与开源项目。</p>
-              <button class="button button--secondary" type="button" data-project-filter="全部">${icon("rotate-ccw")} 清除筛选</button>
+              <h2>No projects match this filter</h2>
+              <p>Show all projects or add another software, model, or open-source project.</p>
+              <button class="button button--secondary" type="button" data-project-filter="All">${icon("rotate-ccw")} Clear filter</button>
             </div>
           `
       }
       ${
-        projectFilter === "全部"
+        projectFilter === "All"
           ? `
             <button class="empty-state" type="button" data-open-intake style="cursor:pointer;min-height:300px">
               <span class="empty-state-icon">${icon("circle-plus")}</span>
-              <h2>接入下一个项目</h2>
-              <p>从链接和一句话价值开始，Rita 会完成项目定位与渠道判断。</p>
-              <span class="button button--secondary">${icon("link-2")} 添加项目链接</span>
+              <h2>Add your next project</h2>
+              <p>Start with a link and a one-line value proposition. Rita will handle positioning and channel matching.</p>
+              <span class="button button--secondary">${icon("link-2")} Add project link</span>
             </button>
           `
           : ""
@@ -1569,8 +1583,8 @@ function renderProjects() {
 function getProjectWorkflowState(projectId) {
   const queueItems = state.queue.filter((item) => item.projectId === projectId);
   return queueItems.some((item) => ["scheduled", "published"].includes(item.status))
-    ? "发布中"
-    : "待发布";
+    ? "Publishing"
+    : "Not published";
 }
 
 function renderProjectCard(project) {
@@ -1579,7 +1593,7 @@ function renderProjectCard(project) {
   return `
     <article class="project-card">
       <div class="project-visual" style="--project-color:${project.color}">
-        <canvas data-project-canvas="${project.id}" aria-label="${escapeAttribute(project.name)} 项目封面"></canvas>
+        <canvas data-project-canvas="${project.id}" aria-label="${escapeAttribute(project.name)} project cover"></canvas>
         <span class="project-stage">${escapeHTML(project.stage)}</span>
       </div>
       <div class="project-card-body">
@@ -1590,11 +1604,11 @@ function renderProjectCard(project) {
           </div>
           <div class="project-launch-score">
             <strong>${project.score}</strong>
-            <span>就绪度</span>
+            <span>Ready</span>
           </div>
         </div>
         <div class="project-card-footer">
-          <div class="channel-stack" aria-label="${channels.length} 个渠道">
+          <div class="channel-stack" aria-label="${channels.length} channels">
             ${channels
               .slice(0, 4)
               .map(
@@ -1605,7 +1619,7 @@ function renderProjectCard(project) {
             ${channels.length > 4 ? `<span class="channel-overflow">+${channels.length - 4}</span>` : ""}
           </div>
           <button class="text-button" type="button" data-open-project="${project.id}">
-            ${assets.length} 份内容 · 查看 ${icon("arrow-right")}
+            ${assets.length} content assets · View ${icon("arrow-right")}
           </button>
         </div>
       </div>
@@ -1614,9 +1628,9 @@ function renderProjectCard(project) {
 }
 
 function renderChannels() {
-  const categories = ["全部", "模型与 Agent", "开发者社区", "新品目录", "中文内容"];
+  const categories = ["All", "Models & Agents", "Developer communities", "Launch directories", "Community channels"];
   const filtered = channelCatalog.filter((channel) => {
-    const categoryMatch = channelFilter === "全部" || channel.group === channelFilter;
+    const categoryMatch = channelFilter === "All" || channel.group === channelFilter;
     const queryMatch =
       !channelQuery ||
       `${channel.name} ${channel.group} ${channel.description} ${channel.audiences.join(" ")}`
@@ -1628,12 +1642,12 @@ function renderChannels() {
   appContent.innerHTML = `
     ${viewHeader(
       "CHANNEL DIRECTORY",
-      "渠道库",
-      "不是把同一段文案群发，而是找到受众、格式和发布规则真正匹配的入口。",
-      `${channelCatalog.length} 个渠道 · 8 个 API 可用`,
+      "Channel library",
+      "Do not broadcast the same copy everywhere. Find channels where audience, format, and publishing rules genuinely match.",
+      `${channelCatalog.length} channels · 8 API-ready`,
     )}
     <div class="toolbar">
-      <div class="filter-group" aria-label="渠道分类">
+      <div class="filter-group" aria-label="Channel categories">
         ${categories
           .map(
             (category) =>
@@ -1643,7 +1657,7 @@ function renderChannels() {
       </div>
       <label class="inline-search">
         ${icon("search")}
-        <input id="channel-search" type="search" placeholder="搜索渠道或受众" value="${escapeAttribute(channelQuery)}" />
+        <input id="channel-search" type="search" placeholder="Search channels or audiences" value="${escapeAttribute(channelQuery)}" />
       </label>
     </div>
     ${
@@ -1675,9 +1689,9 @@ function renderChannelCard(channel) {
         ${channel.audiences.map((audience) => `<span class="audience-pill">${escapeHTML(audience)}</span>`).join("")}
       </div>
       <div class="channel-card-meta">
-        <span class="channel-card-score">当前项目匹配 <strong>${getProjectChannelFit(activeProjectId, channel)}</strong></span>
+        <span class="channel-card-score">Current project fit <strong>${getProjectChannelFit(activeProjectId, channel)}</strong></span>
         <button class="button button--small ${isQueued ? "button--quiet" : "button--secondary"}" type="button" data-add-channel="${channel.id}" ${isQueued ? "disabled" : ""}>
-          ${isQueued ? icon("check") + " 已加入" : icon("plus") + " 生成版本"}
+          ${isQueued ? icon("check") + " Added" : icon("plus") + " Generate draft"}
         </button>
       </div>
     </article>
@@ -1688,9 +1702,9 @@ function renderChannelEmptyState() {
   return `
     <div class="empty-state">
       <span class="empty-state-icon">${icon("search-x")}</span>
-      <h2>没有找到匹配渠道</h2>
-      <p>换一个分类或关键词。渠道库会持续监测新的模型平台、目录和开发者社区。</p>
-      <button class="button button--secondary" type="button" data-channel-filter="全部">清除筛选</button>
+      <h2>No matching channels</h2>
+      <p>Try another category or keyword. The channel library will keep tracking new model platforms, directories, and developer communities.</p>
+      <button class="button button--secondary" type="button" data-channel-filter="All">Clear filters</button>
     </div>
   `;
 }
@@ -1699,7 +1713,7 @@ function renderDiscovery() {
   const project = getProject(activeProjectId) || state.projects[0];
   if (!project) {
     appContent.innerHTML = `
-      ${viewHeader("AI DISCOVERY", "AI 搜索发现", "接入项目后，建立面向 AI 搜索与回答系统的可发现性档案。")}
+      ${viewHeader("AI DISCOVERY", "AI search discovery", "Add a project to build a discoverability profile for AI search and answer systems.")}
       ${renderEmptyProjects()}
     `;
     return;
@@ -1715,14 +1729,14 @@ function renderDiscovery() {
   appContent.innerHTML = `
     ${viewHeader(
       "AI DISCOVERY",
-      "AI 搜索发现",
-      "让 AI 在用户寻找相关软件、开源项目或模型时，能够找到、正确理解并引用你的项目。",
-      "可发现性模拟，不代表具体 AI 产品实际排序",
+      "AI search discovery",
+      "Help AI systems find, understand, and cite your project when users search for relevant software, open-source projects, or models.",
+      "Discoverability simulation. This does not represent the actual ranking of any AI product.",
     )}
 
     <div class="discovery-toolbar">
       <label class="field discovery-project-field">
-        <span>当前优化项目</span>
+        <span>Project being optimized</span>
         <select data-discovery-project>
           ${state.projects
             .map(
@@ -1734,10 +1748,10 @@ function renderDiscovery() {
       </label>
       <div class="discovery-toolbar-actions">
         <button class="button button--secondary" type="button" data-view="studio">
-          ${icon("file-question")} 补充问题内容
+          ${icon("file-question")} Add question content
         </button>
         <button class="button button--primary" type="button" data-generate-discovery>
-          ${icon(profile.hasPackage ? "refresh-cw" : "braces")} ${profile.hasPackage ? "重新生成索引包" : "生成 AI 索引包"}
+          ${icon(profile.hasPackage ? "refresh-cw" : "braces")} ${profile.hasPackage ? "Regenerate discovery package" : "Generate AI discovery package"}
         </button>
       </div>
     </div>
@@ -1745,8 +1759,8 @@ function renderDiscovery() {
     <section class="discovery-overview-grid">
       <article class="panel discovery-score-panel">
         <div class="panel-header">
-          <div class="panel-title">${icon("gauge")}<h2>AI 可发现性</h2></div>
-          <span class="mode-badge ${profile.score >= 82 ? "mode-api" : "mode-assisted"}">${profile.score >= 82 ? "基础良好" : "需要补充事实"}</span>
+          <div class="panel-title">${icon("gauge")}<h2>AI discoverability</h2></div>
+          <span class="mode-badge ${profile.score >= 82 ? "mode-api" : "mode-assisted"}">${profile.score >= 82 ? "Strong foundation" : "More facts needed"}</span>
         </div>
         <div class="discovery-score-content">
           <div class="discovery-score-ring" style="--discovery-score:${profile.score}">
@@ -1754,8 +1768,8 @@ function renderDiscovery() {
             <span>/ 100</span>
           </div>
           <div class="discovery-score-copy">
-            <h3>${escapeHTML(project.name)} 的机器可读基础</h3>
-            <p>AI 系统会综合项目主页、代码仓库、模型卡、第三方引用和明确的问题答案来判断相关性。</p>
+            <h3>Machine-readable foundation for ${escapeHTML(project.name)}</h3>
+            <p>AI systems evaluate relevance using project pages, repositories, model cards, third-party citations, and explicit answers to user questions.</p>
           </div>
         </div>
         <div class="discovery-check-list">
@@ -1765,11 +1779,11 @@ function renderDiscovery() {
 
       <article class="panel discovery-probe-panel">
         <div class="panel-header">
-          <div class="panel-title">${icon("scan-search")}<h2>搜索问题模拟</h2></div>
-          <span class="discovery-panel-caption">规则模拟</span>
+          <div class="panel-title">${icon("scan-search")}<h2>Search question simulation</h2></div>
+          <span class="discovery-panel-caption">Rule-based simulation</span>
         </div>
         <div class="discovery-probe-body">
-          <p class="discovery-probe-intro">输入一个 AI 使用者可能提出的选型问题，查看项目事实是否足以进入候选答案。</p>
+          <p class="discovery-probe-intro">Enter a selection question an AI user might ask, then see whether the project facts are strong enough to enter a candidate answer.</p>
           <form class="discovery-probe-form" data-discovery-probe-form>
             <label class="discovery-probe-input" for="discovery-query-input">
               ${icon("search")}
@@ -1777,13 +1791,13 @@ function renderDiscovery() {
                 id="discovery-query-input"
                 type="search"
                 value="${escapeAttribute(discoveryQuery)}"
-                placeholder="例如：适合远程团队的开源知识库有哪些？"
+                placeholder="Example: Which open-source knowledge bases work well for remote teams?"
                 autocomplete="off"
               />
             </label>
-            <button class="button button--primary" type="submit">${icon("sparkles")} 评估</button>
+            <button class="button button--primary" type="submit">${icon("sparkles")} Evaluate</button>
           </form>
-          <div class="discovery-query-chips" aria-label="示例搜索问题">
+          <div class="discovery-query-chips" aria-label="Example search questions">
             ${queries
               .slice(0, 3)
               .map(
@@ -1799,13 +1813,13 @@ function renderDiscovery() {
                 <div class="discovery-probe-empty">
                   <span>${icon("message-square-text")}</span>
                   <div>
-                    <strong>先从一个真实问题开始</strong>
-                    <p>系统会检查项目名称、类型、受众和使用场景是否与问题形成明确对应。</p>
+                    <strong>Start with a real user question</strong>
+                    <p>The system checks whether the project name, type, audience, and use cases map clearly to the question.</p>
                   </div>
                 </div>
               `
           }
-          <p class="discovery-disclaimer">${icon("info")} 模拟结果用于优化公开内容和事实结构，不代表任何 AI 产品的真实排名。</p>
+          <p class="discovery-disclaimer">${icon("info")} Simulation results help improve public content and factual structure. They do not represent actual rankings in any AI product.</p>
         </div>
       </article>
     </section>
@@ -1813,8 +1827,8 @@ function renderDiscovery() {
     <section class="discovery-content-grid">
       <article class="panel">
         <div class="panel-header">
-          <div class="panel-title">${icon("messages-square")}<h2>值得覆盖的搜索问题</h2></div>
-          <span class="discovery-panel-caption">点击即可模拟</span>
+          <div class="panel-title">${icon("messages-square")}<h2>Search questions worth covering</h2></div>
+          <span class="discovery-panel-caption">Select to simulate</span>
         </div>
         <div class="discovery-opportunity-list">
           ${queries.map((query, index) => renderDiscoveryQuery(query, index)).join("")}
@@ -1823,8 +1837,8 @@ function renderDiscovery() {
 
       <article class="panel">
         <div class="panel-header">
-          <div class="panel-title">${icon("list-checks")}<h2>提升被引用概率</h2></div>
-          <span class="discovery-panel-caption">${actions.length} 个动作</span>
+          <div class="panel-title">${icon("list-checks")}<h2>Improve citation readiness</h2></div>
+          <span class="discovery-panel-caption">${actions.length} actions</span>
         </div>
         <div class="discovery-action-list">
           ${actions.map(renderDiscoveryAction).join("")}
@@ -1834,13 +1848,13 @@ function renderDiscovery() {
 
     <section class="panel discovery-package-panel">
       <div class="panel-header">
-        <div class="panel-title">${icon("file-code-2")}<h2>AI 可读项目索引包</h2></div>
+        <div class="panel-title">${icon("file-code-2")}<h2>AI-readable project index package</h2></div>
         <div class="discovery-package-actions">
           ${
             packageContent
-              ? `<span class="discovery-generated-at">生成于 ${escapeHTML(formatDateTime(packageGeneratedAt))}</span>
-                 <button class="button button--secondary button--small" type="button" data-copy-discovery>${icon("copy")} 复制索引包</button>`
-              : `<button class="button button--secondary button--small" type="button" data-generate-discovery>${icon("braces")} 开始生成</button>`
+              ? `<span class="discovery-generated-at">Generated ${escapeHTML(formatDateTime(packageGeneratedAt))}</span>
+                 <button class="button button--secondary button--small" type="button" data-copy-discovery>${icon("copy")} Copy package</button>`
+              : `<button class="button button--secondary button--small" type="button" data-generate-discovery>${icon("braces")} Start generating</button>`
           }
         </div>
       </div>
@@ -1851,10 +1865,10 @@ function renderDiscovery() {
             <div class="discovery-package-empty">
               <span>${icon("file-json-2")}</span>
               <div>
-                <h3>建立一份可被机器稳定读取的项目事实卡</h3>
-                <p>索引包会整合 canonical 链接、项目定位、目标用户、发布阶段、适用问题和 JSON-LD 结构化数据。</p>
+                <h3>Create a stable machine-readable project fact card</h3>
+                <p>The package combines the canonical URL, positioning, target audience, release stage, relevant questions, and JSON-LD structured data.</p>
               </div>
-              <button class="button button--primary" type="button" data-generate-discovery>${icon("bring-to-front")} 生成索引包</button>
+              <button class="button button--primary" type="button" data-generate-discovery>${icon("bring-to-front")} Generate package</button>
             </div>
           `
       }
@@ -1882,7 +1896,7 @@ function renderDiscoveryProbeResult(result) {
         <span>/100</span>
       </div>
       <div class="discovery-result-copy">
-        <span class="discovery-result-kicker">问题与项目事实的匹配度</span>
+        <span class="discovery-result-kicker">Question-to-fact match score</span>
         <h3>${escapeHTML(result.label)}</h3>
         <p>${escapeHTML(result.reason)}</p>
         ${
@@ -1900,7 +1914,7 @@ function renderDiscoveryProbeResult(result) {
 
 function renderDiscoveryQuery(query, index) {
   const variant = query.fit >= 85 ? "strong" : query.fit >= 72 ? "medium" : "gap";
-  const label = query.fit >= 85 ? "强匹配" : query.fit >= 72 ? "可覆盖" : "待补事实";
+  const label = query.fit >= 85 ? "Strong match" : query.fit >= 72 ? "Can cover" : "Facts needed";
   return `
     <button class="discovery-opportunity-row" type="button" data-discovery-query="${escapeAttribute(query.text)}">
       <span class="discovery-opportunity-rank">${String(index + 1).padStart(2, "0")}</span>
@@ -1941,44 +1955,44 @@ function getDiscoveryProfile(project) {
   const checks = [
     {
       id: "canonical",
-      label: "规范项目链接",
-      detail: "为 AI 和搜索系统提供唯一可信来源",
+      label: "Canonical project URL",
+      detail: "Provide one trusted source for AI and search systems",
       done: Boolean(project.url),
     },
     {
       id: "positioning",
-      label: "一句话定位",
-      detail: "明确项目为谁解决什么问题",
+      label: "One-line positioning",
+      detail: "State who the project serves and what problem it solves",
       done: project.tagline.length >= 18,
     },
     {
       id: "audience",
-      label: "明确目标用户",
-      detail: "让选型问题能与项目受众对应",
+      label: "Clear target audience",
+      detail: "Connect selection questions to the people the project serves",
       done: Boolean(project.audience),
     },
     {
       id: "content",
-      label: "至少两份问题内容",
-      detail: "覆盖使用场景、常见问题或对比内容",
+      label: "At least two question-focused assets",
+      detail: "Cover use cases, common questions, or comparisons",
       done: assets.length >= 2,
     },
     {
       id: "sources",
-      label: "多来源公开事实",
-      detail: "通过代码仓库、模型卡或目录形成交叉引用",
+      label: "Public facts across multiple sources",
+      detail: "Cross-reference the repository, model card, or directories",
       done: project.channels.length >= 3,
     },
     {
       id: "freshness",
-      label: "近期更新信号",
-      detail: "90 天内发布或更新，减少过期事实",
+      label: "Recent update signal",
+      detail: "Publish or update within 90 days to avoid stale facts",
       done: isFresh,
     },
     {
       id: "machine",
-      label: "AI 可读索引包",
-      detail: "准备 llms.txt 风格事实卡与 JSON-LD",
+      label: "AI-readable discovery package",
+      detail: "Provide an llms.txt-style fact card and JSON-LD",
       done: Boolean(project.discoveryPackage?.content),
     },
   ];
@@ -2000,40 +2014,40 @@ function getDiscoveryProfile(project) {
 }
 
 function getDiscoveryQueries(project) {
-  const audience = String(project.audience || "目标用户")
-    .split(/[、,，/]/)
+  const audience = String(project.audience || "target users")
+    .split(/[,/]/)
     .map((item) => item.trim())
-    .find(Boolean) || "目标用户";
+    .find(Boolean) || "target users";
   const packageBonus = project.discoveryPackage?.content ? 4 : 0;
   return [
     {
-      text: `${project.name} 是什么，适合哪些人？`,
-      intent: "品牌实体理解",
-      detail: "需要项目主页与统一简介",
+      text: `What is ${project.name}, and who is it for?`,
+      intent: "Brand and entity understanding",
+      detail: "Requires a project page and consistent description",
       fit: 94,
     },
     {
-      text: `适合${audience}的${project.type}有哪些？`,
-      intent: "选型推荐",
-      detail: "需要明确的受众与分类",
+      text: `Which ${project.type} options are best for ${audience}?`,
+      intent: "Selection recommendation",
+      detail: "Requires a clear audience and category",
       fit: 87 + packageBonus,
     },
     {
-      text: `${project.tagline.replace(/[。.!！]+$/, "")}，有哪些工具可以做到？`,
-      intent: "问题解决",
-      detail: "需要场景化 FAQ 与示例",
+      text: `Which tools can achieve this: ${project.tagline.replace(/[.!]+$/, "")}?`,
+      intent: "Problem solving",
+      detail: "Requires use-case FAQs and examples",
       fit: 79 + packageBonus,
     },
     {
-      text: `${project.name} 有哪些替代方案，和同类项目有什么区别？`,
-      intent: "比较决策",
-      detail: "需要公开对比页与限制说明",
+      text: `What alternatives exist to ${project.name}, and how does it compare?`,
+      intent: "Comparison decision",
+      detail: "Requires public comparisons and limitation notes",
       fit: 63 + packageBonus,
     },
     {
-      text: `2026 年值得关注的${project.type}有哪些？`,
-      intent: "时效发现",
-      detail: "需要版本、更新日期与外部引用",
+      text: `Which ${project.type} projects are worth watching in 2026?`,
+      intent: "Timely discovery",
+      detail: "Requires version, update dates, and external citations",
       fit: project.score >= 88 ? 74 + packageBonus : 67 + packageBonus,
     },
   ];
@@ -2044,35 +2058,35 @@ function getDiscoveryActions(project, profile) {
   if (!profile.hasPackage) {
     actions.push({
       icon: "braces",
-      title: "生成可被机器读取的项目事实卡",
-      detail: "把 canonical 链接、定位、受众和适用问题整理成统一索引包。",
-      buttonLabel: "生成",
+      title: "Generate a machine-readable project fact card",
+      detail: "Combine the canonical URL, positioning, audience, and relevant questions into one discovery package.",
+      buttonLabel: "Generate",
       generate: true,
     });
   } else {
     actions.push({
       icon: "copy",
-      title: "把索引包同步到项目主页",
-      detail: "发布到 README、模型卡或官网，并持续保持 canonical 链接一致。",
-      buttonLabel: "复制",
+      title: "Sync the package to the project page",
+      detail: "Publish it in the README, model card, or website, and keep the canonical URL consistent.",
+      buttonLabel: "Copy",
       copy: true,
     });
   }
   actions.push({
     icon: "git-compare-arrows",
-    title: "增加选型对比与替代方案",
-    detail: "覆盖“和同类有什么区别”“什么时候不该使用”等高意图问题。",
-    buttonLabel: "补充",
+    title: "Add selection comparisons and alternatives",
+    detail: "Cover high-intent questions such as how it differs from similar tools and when it should not be used.",
+    buttonLabel: "Add",
     view: "studio",
   });
   actions.push({
     icon: "badge-check",
-    title: "建立可引用的证据段落",
+    title: "Create citable evidence sections",
     detail:
-      project.type.includes("模型")
-        ? "公开评测方法、能力边界、硬件要求与可复现样例，避免模型补全未知参数。"
-        : "公开真实使用场景、限制、安装方式和可复现结果，便于 AI 精确引用。",
-    buttonLabel: "准备",
+      /model/i.test(project.type)
+        ? "Publish evaluation methods, capability boundaries, hardware requirements, and reproducible examples so AI does not infer unknown parameters."
+        : "Publish real use cases, limitations, installation steps, and reproducible results so AI can cite them accurately.",
+    buttonLabel: "Prepare",
     view: "studio",
   });
   return actions;
@@ -2085,7 +2099,7 @@ function runDiscoveryProbe(query) {
   const input = document.querySelector("#discovery-query-input");
   const finalQuery = normalizedQuery || input?.value.trim() || "";
   if (!finalQuery) {
-    showToast("输入一个搜索问题", "例如：适合中文团队的开源智能体框架有哪些？");
+    showToast("Enter a search question", "Example: Which open-source agent frameworks work well for distributed product teams?");
     input?.focus();
     return;
   }
@@ -2100,26 +2114,24 @@ function analyzeDiscoveryQuery(project, query) {
   const projectText = `${project.name} ${project.type} ${project.audience} ${project.tagline}`.toLowerCase();
   const vocabulary = [
     "AI",
-    "智能体",
     "Agent",
-    "模型",
-    "开源",
-    "开发者",
-    "工程师",
-    "研究者",
-    "团队",
-    "企业",
-    "产品经理",
-    "创作者",
-    "工作流",
-    "知识库",
-    "会议",
-    "中文",
-    "多模态",
-    "端侧",
-    "工具",
-    "软件",
-    "框架",
+    "Model",
+    "Open source",
+    "Developer",
+    "Engineer",
+    "Researcher",
+    "Team",
+    "Enterprise",
+    "Product manager",
+    "Creator",
+    "Workflow",
+    "Knowledge base",
+    "Meeting",
+    "Multimodal",
+    "Edge",
+    "Tool",
+    "Software",
+    "Framework",
     "SaaS",
     "API",
     "SDK",
@@ -2135,9 +2147,9 @@ function analyzeDiscoveryQuery(project, query) {
   let score = profile.score - 10;
   if (nameMatched) score += 18;
   score += Math.min(22, matched.length * 5);
-  if (/推荐|有哪些|哪个|适合|寻找|帮我找|选型/.test(query)) score += 4;
-  const asksComparison = /对比|替代|区别|vs|更好/.test(normalized);
-  const asksEvidence = /评测|benchmark|准确率|效果|性能|许可|license|价格|收费/.test(normalized);
+  if (/recommend|which|best|suitable|find|looking for|choose/i.test(query)) score += 4;
+  const asksComparison = /compare|alternative|difference|versus|\bvs\b|better/i.test(normalized);
+  const asksEvidence = /benchmark|accuracy|result|performance|license|pricing|cost/i.test(normalized);
   if (asksComparison) score -= 5;
   if (asksEvidence) score -= 4;
   score = Math.max(42, Math.min(97, score));
@@ -2145,20 +2157,20 @@ function analyzeDiscoveryQuery(project, query) {
   const tone = score >= 82 ? "strong" : score >= 68 ? "medium" : "weak";
   const label =
     score >= 82
-      ? "具备进入候选答案的事实基础"
+      ? "Strong enough for a candidate answer"
       : score >= 68
-        ? "可以被理解，但证据还不够完整"
-        : "与当前公开事实的关联较弱";
+        ? "Understandable, but the evidence is incomplete"
+        : "Weak connection to the currently public facts";
   const reason = matched.length
-    ? `问题命中 ${matched.slice(0, 4).join("、")} 等项目事实，AI 更容易把搜索意图与 ${project.name} 对应起来。`
-    : `问题尚未命中 ${project.name} 的分类、受众或使用场景词，需要更明确的公开内容建立关联。`;
+    ? `The query matches project facts from ${matched.slice(0, 4).join(", ")}, making it easier for AI to connect the search intent with ${project.name}.`
+    : `The query does not yet match ${project.name}'s category, audience, or use-case terms. Publish clearer public content to establish that connection.`;
   const nextStep = asksComparison
-    ? "补充与同类项目的对比页，并明确适用和不适用场景。"
+    ? "Add a comparison page and clearly state when the project is and is not a good fit."
     : asksEvidence
-      ? "补充可复现的评测、性能或成本证据，并放在稳定链接中。"
+      ? "Publish reproducible benchmark, performance, or cost evidence at a stable URL."
       : profile.hasPackage
-        ? "保持索引包、项目主页与发布日期一致，并争取第三方引用。"
-        : "先生成 AI 可读索引包，再同步到项目主页和模型卡。";
+        ? "Keep the discovery package, project page, and release date consistent, and seek third-party citations."
+        : "Generate an AI-readable discovery package, then publish it on the project page and model card.";
 
   return { score, tone, label, reason, nextStep, matched };
 }
@@ -2181,10 +2193,10 @@ function generateDiscoveryPackage() {
   renderDiscovery();
   const remaining = getRemainingUsage(snapshot.plan.limits.indexPackages, state.billing.usage.indexPackages);
   showToast(
-    "AI 索引包已生成",
+    "AI discovery package generated",
     Number.isFinite(remaining)
-      ? `包含项目事实卡、搜索问题与 JSON-LD；本月剩余 ${formatUsageLimit(remaining)} 份`
-      : "包含项目事实卡、搜索问题与 JSON-LD 结构化数据",
+      ? `Includes a project fact card, search questions, and JSON-LD. ${formatUsageLimit(remaining)} package credits remain this month.`
+      : "Includes a project fact card, search questions, and JSON-LD structured data.",
   );
 }
 
@@ -2192,21 +2204,21 @@ function copyDiscoveryPackage() {
   const project = getProject(activeProjectId) || state.projects[0];
   if (!project) return;
   if (!project.discoveryPackage?.content) {
-    showToast("还没有 AI 索引包", "请先生成索引包，再复制到项目主页或模型卡");
+    showToast("No AI discovery package yet", "Generate a package before copying it to the project page or model card.");
     return;
   }
-  copyToClipboard(project.discoveryPackage.content, "AI 索引包已复制");
+  copyToClipboard(project.discoveryPackage.content, "AI discovery package copied");
 }
 
 function buildDiscoveryPackage(project) {
   const generatedAt = new Date();
   const generatedDate = generatedAt.toISOString().slice(0, 10);
-  const schemaType = project.type.includes("开源") ? "SoftwareSourceCode" : "SoftwareApplication";
+  const schemaType = /open[- ]source/i.test(project.type) ? "SoftwareSourceCode" : "SoftwareApplication";
   const schema = {
     "@context": "https://schema.org",
     "@type": schemaType,
     name: project.name,
-    description: `${project.tagline} 面向${project.audience}。`,
+    description: `${project.tagline} Intended for ${project.audience}.`,
     url: project.url,
     applicationCategory: project.type,
     audience: {
@@ -2214,7 +2226,7 @@ function buildDiscoveryPackage(project) {
       audienceType: project.audience,
     },
     dateModified: generatedDate,
-    keywords: [project.type, ...project.audience.split(/[、,，/]/).map((item) => item.trim()).filter(Boolean)],
+    keywords: [project.type, ...project.audience.split(/[,/]/).map((item) => item.trim()).filter(Boolean)],
   };
   const queryLines = getDiscoveryQueries(project)
     .slice(0, 4)
@@ -2256,7 +2268,7 @@ function renderStudio() {
   const project = getProject(studioSettings.projectId) || state.projects[0];
   if (!project) {
     appContent.innerHTML = `
-      ${viewHeader("CONTENT STUDIO", "内容工坊", "先接入一个项目，再生成渠道版本。")}
+      ${viewHeader("CONTENT STUDIO", "Content Studio", "Connect a project to generate channel-ready versions.")}
       ${renderEmptyProjects()}
     `;
     return;
@@ -2275,14 +2287,14 @@ function renderStudio() {
   appContent.innerHTML = `
     ${viewHeader(
       "CONTENT STUDIO",
-      "内容工坊",
-      "从同一个事实源出发，为每个渠道重新组织叙事、格式与行动号召。",
-      `${getProjectChannelFit(project.id, getChannel("github"))}% 技术渠道匹配`,
+      "Content Studio",
+      "Turn one source of truth into channel-specific narratives, formats, and calls to action.",
+      `${getProjectChannelFit(project.id, getChannel("github"))}% technical channel fit`,
     )}
     <section class="studio-layout">
       <aside class="panel studio-controls">
         <div class="control-section">
-          <label class="control-label">发布项目 <span>${escapeHTML(project.type)}</span></label>
+          <label class="control-label">Publishing project <span>${escapeHTML(project.type)}</span></label>
           <select class="control-select" data-studio-project>
             ${state.projects
               .map(
@@ -2293,7 +2305,7 @@ function renderStudio() {
           </select>
         </div>
         <div class="control-section">
-          <div class="control-label">目标渠道 <span id="selected-channel-count">${studioSettings.channels.length} 个已选</span></div>
+          <div class="control-label">Target channels <span id="selected-channel-count">${studioSettings.channels.length} selected</span></div>
           <div class="channel-checks">
             ${availableChannels
               .map((channel) => {
@@ -2313,9 +2325,9 @@ function renderStudio() {
           </div>
         </div>
         <div class="control-section">
-          <div class="control-label">表达方式</div>
+          <div class="control-label">Tone</div>
           <div class="segmented" style="display:flex;width:100%">
-            ${["技术可信", "简洁直接", "故事感"]
+            ${["Technical", "Concise", "Story-driven"]
               .map(
                 (tone) =>
                   `<button class="segment-button ${studioSettings.tone === tone ? "is-active" : ""}" type="button" data-setting="tone" data-value="${tone}">${tone}</button>`,
@@ -2324,9 +2336,9 @@ function renderStudio() {
           </div>
         </div>
         <div class="control-section">
-          <label class="control-label">发布目标</label>
+          <label class="control-label">Publishing goal</label>
           <select class="control-select" data-studio-select="goal">
-            ${["首发", "获取种子用户", "寻找开源贡献者", "产品更新"]
+            ${["Launch", "Acquire early users", "Find open-source contributors", "Product update"]
               .map(
                 (goal) =>
                   `<option ${studioSettings.goal === goal ? "selected" : ""}>${goal}</option>`,
@@ -2335,13 +2347,13 @@ function renderStudio() {
           </select>
         </div>
         <div class="studio-quota">
-          <span>${icon("gauge")} 本月剩余 ${escapeHTML(formatUsageLimit(contentRemaining))} 份</span>
-          <button class="text-button" type="button" data-open-billing="content">查看额度 ${icon("arrow-up-right")}</button>
+          <span>${icon("gauge")} ${escapeHTML(formatUsageLimit(contentRemaining))} left this month</span>
+          <button class="text-button" type="button" data-open-billing="content">View usage ${icon("arrow-up-right")}</button>
         </div>
         <button class="button button--primary generate-button" type="button" data-generate>
-          ${icon("sparkles")} 生成 ${studioSettings.channels.length} 个渠道版本
+          ${icon("sparkles")} Generate ${studioSettings.channels.length} channel versions
         </button>
-        <p class="studio-quota-note">本次将使用 ${studioSettings.channels.length} 份额度，生成失败不扣除。</p>
+        <p class="studio-quota-note">This will use ${studioSettings.channels.length} content credits. Failed generations are not charged.</p>
       </aside>
       <section class="studio-main">
         ${
@@ -2349,11 +2361,11 @@ function renderStudio() {
             ? `
               <div class="asset-heading">
                 <div>
-                  <h2>${generatedForProject.length ? "新生成的内容包" : "已有内容资产"}</h2>
-                  <p>${generatedForProject.length ? "每个版本都已按渠道格式重新组织，可继续手动编辑。" : `${displayAssets.length} 个版本，其中 ${displayAssets.filter((a) => a.status === "review").length} 个等待审核。`}</p>
+                  <h2>${generatedForProject.length ? "New content pack" : "Existing content assets"}</h2>
+                  <p>${generatedForProject.length ? "Each version is formatted for its channel and remains available for manual editing." : `${displayAssets.length} versions, including ${displayAssets.filter((a) => a.status === "review").length} awaiting review.`}</p>
                 </div>
                 <button class="button button--secondary button--small" type="button" data-view="queue">
-                  ${icon("send")} 打开队列
+                  ${icon("send")} Open queue
                 </button>
               </div>
               <div class="asset-grid">
@@ -2366,10 +2378,10 @@ function renderStudio() {
                   <span class="prompt-line"></span>
                   <span class="prompt-spark">${icon("sparkles")}</span>
                 </div>
-                <h2>准备一套渠道内容</h2>
-                <p>选择左侧渠道，生成能直接审核和编辑的版本。</p>
+                <h2>Prepare a channel content pack</h2>
+                <p>Select channels on the left to generate review- and edit-ready versions.</p>
                 <button class="button button--primary" type="button" data-generate style="margin-top:16px">
-                  ${icon("wand-sparkles")} 生成第一版
+                  ${icon("wand-sparkles")} Generate first draft
                 </button>
               </div>
             `
@@ -2381,7 +2393,7 @@ function renderStudio() {
 
 function updateSelectedChannelCount() {
   const count = document.querySelector("#selected-channel-count");
-  if (count) count.textContent = `${studioSettings.channels.length} 个已选`;
+  if (count) count.textContent = `${studioSettings.channels.length} selected`;
 }
 
 function renderAssetCard(asset) {
@@ -2393,8 +2405,8 @@ function renderAssetCard(asset) {
         <div class="asset-channel">
           <span class="channel-mark" style="--channel-color:${channel?.color};--channel-bg:${channel?.bg}">${escapeHTML(channel ? channelShort(channel) : "?")}</span>
           <div>
-            <strong>${escapeHTML(channel?.name || "未知渠道")}</strong>
-            <span>${escapeHTML(channel?.channelFormat || "渠道内容")}</span>
+            <strong>${escapeHTML(channel?.name || "Unknown channel")}</strong>
+            <span>${escapeHTML(channel?.channelFormat || "Channel content")}</span>
           </div>
         </div>
         <span class="asset-format">${escapeHTML(studioSettings.language === "English" ? "EN" : "ADAPTED")}</span>
@@ -2405,11 +2417,11 @@ function renderAssetCard(asset) {
         ${(asset.tags || []).slice(0, 4).map((tag) => `<span class="asset-tag">#${escapeHTML(tag)}</span>`).join("")}
       </div>
       <div class="asset-card-footer">
-        <span class="asset-count">${asset.body.length} 字符 · ${statusLabel(asset.status)}</span>
+        <span class="asset-count">${asset.body.length} characters · ${statusLabel(asset.status)}</span>
         <div class="asset-actions">
-          <button class="button button--quiet button--small" type="button" data-open-asset="${asset.id}" title="编辑文案">${icon("pencil")}</button>
+          <button class="button button--quiet button--small" type="button" data-open-asset="${asset.id}" title="Edit content">${icon("pencil")}</button>
           <button class="button button--secondary button--small" type="button" data-queue-asset="${asset.id}" ${isQueued ? "disabled" : ""}>
-            ${isQueued ? icon("check") + " 已加入" : icon("plus") + " 入队"}
+            ${isQueued ? icon("check") + " Added" : icon("plus") + " Add to queue"}
           </button>
         </div>
       </div>
@@ -2425,24 +2437,24 @@ function renderQueue() {
     scheduled: allItems.filter((item) => item.status === "scheduled").length,
     published: allItems.filter((item) => item.status === "published").length,
   };
-  const filters = ["全部", "待审核", "可发布", "已排期", "已发布"];
+  const filters = ["All", "Pending", "Ready", "Scheduled", "Published"];
   const filteredItems = allItems.filter((item) => {
-    if (queueFilter === "全部") return true;
+    if (queueFilter === "All") return true;
     return statusLabel(item.status) === queueFilter;
   });
 
   appContent.innerHTML = `
     ${viewHeader(
       "PUBLISH QUEUE",
-      "发布队列",
-      "Rita 准备内容，你保留最后的发布决定。每个外部动作都有清晰的当前状态。",
-      "时间均按 Asia/Shanghai 显示",
+      "Publishing Queue",
+      "Rita prepares the content while you keep the final publishing decision. Every external action has a clear current state.",
+      "All times are shown in Asia/Shanghai",
     )}
     <section class="queue-summary">
-      ${queueSummaryItem("eye", "待审核", stats.review, "amber")}
-      ${queueSummaryItem("circle-check-big", "可发布", stats.ready, "")}
-      ${queueSummaryItem("calendar-clock", "已排期", stats.scheduled, "violet")}
-      ${queueSummaryItem("badge-check", "已发布", stats.published, "green")}
+      ${queueSummaryItem("eye", "Pending", stats.review, "amber")}
+      ${queueSummaryItem("circle-check-big", "Ready", stats.ready, "")}
+      ${queueSummaryItem("calendar-clock", "Scheduled", stats.scheduled, "violet")}
+      ${queueSummaryItem("badge-check", "Published", stats.published, "green")}
     </section>
     <div class="toolbar">
       <div class="filter-group">
@@ -2453,7 +2465,7 @@ function renderQueue() {
           )
           .join("")}
       </div>
-      <button class="button button--secondary" type="button" data-view="studio">${icon("plus")} 生成新内容</button>
+      <button class="button button--secondary" type="button" data-view="studio">${icon("plus")} Generate content</button>
     </div>
     <section class="panel data-panel">
       ${
@@ -2462,12 +2474,12 @@ function renderQueue() {
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>内容</th>
-                  <th>项目</th>
-                  <th>渠道</th>
-                  <th>状态</th>
-                  <th>计划时间</th>
-                  <th style="text-align:right">操作</th>
+                  <th>Content</th>
+                  <th>Project</th>
+                  <th>Channel</th>
+                  <th>Status</th>
+                  <th>Scheduled time</th>
+                  <th style="text-align:right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -2475,7 +2487,7 @@ function renderQueue() {
               </tbody>
             </table>
           `
-          : `<div class="queue-empty">当前筛选下没有内容。</div>`
+          : `<div class="queue-empty">No content matches the current filter.</div>`
       }
     </section>
   `;
@@ -2501,47 +2513,47 @@ function renderQueueRow(item) {
     <tr>
       <td>
         <div style="display:flex;align-items:center;gap:9px;min-width:230px">
-          <button class="icon-button" type="button" data-open-asset="${asset?.id}" style="width:30px;height:30px" aria-label="预览内容">
+          <button class="icon-button" type="button" data-open-asset="${asset?.id}" style="width:30px;height:30px" aria-label="Preview content">
             ${icon("file-text")}
           </button>
           <div style="min-width:0">
-            <strong style="display:block;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px">${escapeHTML(asset?.title || "未命名内容")}</strong>
-            <span class="table-muted" style="display:block;margin-top:2px;font-size:8px">${asset?.body.length || 0} 字符</span>
+            <strong style="display:block;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px">${escapeHTML(asset?.title || "Untitled content")}</strong>
+            <span class="table-muted" style="display:block;margin-top:2px;font-size:8px">${asset?.body.length || 0} characters</span>
           </div>
         </div>
       </td>
       <td>
         <div class="queue-project">
           <span class="project-monogram" style="--project-color:${project?.color || "#205fd7"}">${escapeHTML(project ? initials(project.name) : "?")}</span>
-          <span>${escapeHTML(project?.name || "未知项目")}</span>
+          <span>${escapeHTML(project?.name || "Unknown project")}</span>
         </div>
       </td>
       <td>
         <div class="table-channel" style="min-width:110px">
           <span class="channel-mark" style="--channel-color:${channel?.color};--channel-bg:${channel?.bg}">${escapeHTML(channel ? channelShort(channel) : "?")}</span>
-          <strong>${escapeHTML(channel?.name || "未知渠道")}</strong>
+          <strong>${escapeHTML(channel?.name || "Unknown channel")}</strong>
         </div>
       </td>
       <td>${statusBadge(item.status)}</td>
-      <td class="table-muted">${item.scheduledAt ? formatDateTime(item.scheduledAt) : "未排期"}</td>
+      <td class="table-muted">${item.scheduledAt ? formatDateTime(item.scheduledAt) : "Not scheduled"}</td>
       <td>
         <div class="queue-actions">
           ${
             item.status === "review"
-              ? `<button class="button button--success button--small" type="button" data-approve-queue="${item.id}">${icon("check")} 审核通过</button>`
+              ? `<button class="button button--success button--small" type="button" data-approve-queue="${item.id}">${icon("check")} Approve</button>`
               : ""
           }
           ${
             item.status === "ready"
-              ? `<button class="button button--secondary button--small" type="button" data-approve-queue="${item.id}">${icon("calendar-clock")} 排期</button>`
+              ? `<button class="button button--secondary button--small" type="button" data-approve-queue="${item.id}">${icon("calendar-clock")} Schedule</button>`
               : ""
           }
           ${
             item.status === "scheduled"
-              ? `<button class="button button--secondary button--small" type="button" data-mark-published="${item.id}">${icon("external-link")} 标记已发布</button>`
+              ? `<button class="button button--secondary button--small" type="button" data-mark-published="${item.id}">${icon("external-link")} Mark as published</button>`
               : ""
           }
-          <button class="icon-button" type="button" data-remove-queue="${item.id}" style="width:30px;height:30px" title="移除" aria-label="从队列移除">${icon("trash-2")}</button>
+          <button class="icon-button" type="button" data-remove-queue="${item.id}" style="width:30px;height:30px" title="Remove" aria-label="Remove from queue">${icon("trash-2")}</button>
         </div>
       </td>
     </tr>
@@ -2552,9 +2564,9 @@ function renderEmptyProjects() {
   return `
     <div class="empty-state">
       <span class="empty-state-icon">${icon("package-open")}</span>
-      <h2>先接入第一个项目</h2>
-      <p>无论是软件、模型还是开源项目，都可以从一句价值主张开始建立分发计划。</p>
-      <button class="button button--primary" type="button" data-open-intake>${icon("plus")} 接入项目</button>
+      <h2>Connect your first project</h2>
+      <p>Start a distribution plan from a single value proposition, whether you are publishing software, a model, or an open-source project.</p>
+      <button class="button button--primary" type="button" data-open-intake>${icon("plus")} Connect project</button>
     </div>
   `;
 }
@@ -2578,8 +2590,8 @@ async function handleIntakeSubmit(event) {
     name: String(formData.get("name") || "").trim(),
     url: String(formData.get("url") || "").trim(),
     tagline: String(formData.get("tagline") || "").trim(),
-    type: String(formData.get("type") || "AI 应用"),
-    stage: String(formData.get("stage") || "Beta 内测"),
+    type: String(formData.get("type") || "AI app"),
+    stage: String(formData.get("stage") || "Beta"),
     audience: String(formData.get("audience") || "").trim(),
   };
   if (!projectInput.name || !projectInput.url || !projectInput.tagline || !projectInput.audience) return;
@@ -2625,14 +2637,14 @@ async function handleIntakeSubmit(event) {
   render();
   updateProfileSummary();
   showToast(
-    "项目已接入",
-    `${project.name} 已生成 ${starterAssets.length} 份起步内容，并计入本月内容额度`,
+    "Project connected",
+    `${project.name} generated ${starterAssets.length} starter assets and used the corresponding content credits for this month`,
   );
 }
 
 function createAnalyzedProject(input) {
   const channelIds = chooseChannelsForProject(input);
-  const scoreBase = input.type.includes("模型") ? 88 : input.type.includes("开源") ? 86 : 81;
+  const scoreBase = /model/i.test(input.type) ? 88 : /open.source/i.test(input.type) ? 86 : 81;
   const completeness =
     (input.tagline.length >= 25 ? 2 : 0) + (input.audience.length >= 6 ? 2 : 0) + (input.url.startsWith("https://") ? 2 : 0);
   const palette = ["#205fd7", "#167457", "#6751ac", "#dc6046", "#a96d0d"];
@@ -2650,10 +2662,10 @@ function createAnalyzedProject(input) {
 function chooseChannelsForProject(input) {
   const text = `${input.type} ${input.audience} ${input.tagline}`.toLowerCase();
   const base = ["github", "hackernews"];
-  if (/模型|model|多模态|llm|大模型/.test(text)) base.push("huggingface", "modelscope", "zhihu");
+  if (/model|multimodal|llm|foundation/.test(text)) base.push("huggingface", "modelscope", "zhihu");
   else base.push("producthunt", "v2ex", "futurepedia");
-  if (/agent|智能体|bot|工作流/.test(text)) base.push("coze", "poe", "dify");
-  if (/中文|国内|小红书|创作者/.test(text)) base.push("jike", "xiaohongshu");
+  if (/agent|bot|workflow|automation/.test(text)) base.push("coze", "poe", "dify");
+  if (/creator|consumer|social|community/.test(text)) base.push("jike", "xiaohongshu");
   return [...new Set(base)].slice(0, 7);
 }
 
@@ -2691,7 +2703,7 @@ function openProjectDetail(projectId) {
   detailModalContent.innerHTML = `
     <div class="detail-hero" style="--project-color:${project.color}">
       <canvas data-detail-canvas="${project.id}"></canvas>
-      <button class="icon-button detail-close" type="button" data-close-modal aria-label="关闭">${icon("x")}</button>
+      <button class="icon-button detail-close" type="button" data-close-modal aria-label="Close">${icon("x")}</button>
       <div class="detail-hero-content">
         <div>
           <span class="eyebrow" style="color:rgba(255,255,255,.7)">${escapeHTML(project.type)} · ${escapeHTML(project.stage)}</span>
@@ -2700,19 +2712,19 @@ function openProjectDetail(projectId) {
         </div>
         <div class="detail-score">
           <strong>${project.score}</strong>
-          <span>发布就绪度</span>
+          <span>Publishing readiness</span>
         </div>
       </div>
     </div>
     <div class="detail-body">
       <div class="detail-stats">
-        <div class="detail-stat"><span>目标用户</span><strong style="font-size:10px">${escapeHTML(project.audience)}</strong></div>
-        <div class="detail-stat"><span>渠道组合</span><strong>${project.channels.length} 个</strong></div>
-        <div class="detail-stat"><span>内容资产</span><strong>${assets.length} 份</strong></div>
+        <div class="detail-stat"><span>Target audience</span><strong style="font-size:10px">${escapeHTML(project.audience)}</strong></div>
+        <div class="detail-stat"><span>Channel mix</span><strong>${project.channels.length}</strong></div>
+        <div class="detail-stat"><span>Content assets</span><strong>${assets.length}</strong></div>
       </div>
       <div class="detail-section-title">
-        <h3>建议分发顺序</h3>
-        <span>按当前项目适配度排序</span>
+        <h3>Recommended publishing order</h3>
+        <span>Ranked by fit for this project</span>
       </div>
       <div class="detail-channel-list">
         ${channels.map((channel) => renderDetailChannel(project, channel)).join("")}
@@ -2720,8 +2732,8 @@ function openProjectDetail(projectId) {
       <div class="detail-footer">
         <a href="${escapeAttribute(project.url)}" target="_blank" rel="noreferrer">${icon("link-2")} ${escapeHTML(project.url)}</a>
         <div class="detail-footer-actions">
-          <button class="button button--secondary" type="button" data-add-channel="${channels[0]?.id || "github"}">${icon("plus")} 生成内容</button>
-          <button class="button button--primary" type="button" data-view="studio">${icon("wand-sparkles")} 进入内容工坊</button>
+          <button class="button button--secondary" type="button" data-add-channel="${channels[0]?.id || "github"}">${icon("plus")} Generate content</button>
+          <button class="button button--primary" type="button" data-view="studio">${icon("wand-sparkles")} Open Content Studio</button>
         </div>
       </div>
     </div>
@@ -2760,35 +2772,35 @@ function openAssetEditor(assetId) {
       <div class="asset-preview-channel">
         <span class="channel-mark channel-mark--large" style="--channel-color:${channel?.color};--channel-bg:${channel?.bg}">${escapeHTML(channel ? channelShort(channel) : "?")}</span>
         <div>
-          <strong id="asset-modal-title">${escapeHTML(channel?.name || "渠道内容")}</strong>
-          <span>${escapeHTML(project?.name || "未知项目")} · ${escapeHTML(channel?.channelFormat || "")}</span>
+          <strong id="asset-modal-title">${escapeHTML(channel?.name || "Channel content")}</strong>
+          <span>${escapeHTML(project?.name || "Unknown project")} · ${escapeHTML(channel?.channelFormat || "")}</span>
         </div>
       </div>
-      <button class="icon-button" type="button" data-close-modal aria-label="关闭">${icon("x")}</button>
+      <button class="icon-button" type="button" data-close-modal aria-label="Close">${icon("x")}</button>
     </div>
     <form class="asset-editor" id="asset-edit-form">
       <label class="field">
-        <span>标题</span>
+        <span>Title</span>
         <input id="asset-title-input" name="title" value="${escapeAttribute(asset.title)}" maxlength="120" />
       </label>
       <label class="field">
-        <span>正文</span>
+        <span>Body</span>
         <textarea id="asset-content-input" name="body">${escapeHTML(asset.body)}</textarea>
       </label>
       <div class="asset-editor-meta">
-        <span id="asset-character-count">${asset.body.length} 字符</span>
-        <span>${channel?.mode === "api" ? "接口可用，仍需账号授权" : channel?.mode === "assisted" ? "发布时需浏览器辅助确认" : "需人工完成平台提交"}</span>
+        <span id="asset-character-count">${asset.body.length} characters</span>
+        <span>${channel?.mode === "api" ? "API available; account authorization is still required" : channel?.mode === "assisted" ? "Browser-assisted confirmation is required when publishing" : "Manual submission on the platform is required"}</span>
       </div>
       <div class="asset-editor-actions">
-        <button class="button button--quiet" type="button" data-close-modal>取消</button>
-        <button class="button button--secondary" type="button" id="copy-asset-body-button">${icon("copy")} 复制正文</button>
-        <button class="button button--primary" type="submit" data-save-asset="${asset.id}">${icon("save")} 保存内容</button>
+        <button class="button button--quiet" type="button" data-close-modal>Cancel</button>
+        <button class="button button--secondary" type="button" id="copy-asset-body-button">${icon("copy")} Copy body</button>
+        <button class="button button--primary" type="submit" data-save-asset="${asset.id}">${icon("save")} Save content</button>
       </div>
     </form>
   `;
   const form = assetModalContent.querySelector("#asset-edit-form");
   assetModalContent.querySelector("#copy-asset-body-button").addEventListener("click", () => {
-    copyToClipboard(assetModalContent.querySelector("#asset-content-input").value, "文案已复制");
+    copyToClipboard(assetModalContent.querySelector("#asset-content-input").value, "Content copied");
   });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -2811,7 +2823,7 @@ function saveAssetEdit(assetId, form) {
   persist();
   closeAllModals();
   render();
-  showToast("内容已保存", "草稿与发布队列都会使用这个版本");
+  showToast("Content saved", "Drafts and the publishing queue will use this version");
 }
 
 function addChannelToStudio(channelId) {
@@ -2823,7 +2835,7 @@ function addChannelToStudio(channelId) {
   currentView = "studio";
   syncViewButtons();
   render();
-  showToast("已加入内容工坊", `${channel.name} 将生成一个独立渠道版本`);
+  showToast("Added to Content Studio", `${channel.name} will receive a dedicated channel version`);
 }
 
 function generateContentPack() {
@@ -2831,7 +2843,7 @@ function generateContentPack() {
   if (!project) return;
   const selectedChannels = [...new Set(studioSettings.channels)].map(getChannel).filter(Boolean);
   if (!selectedChannels.length) {
-    showToast("选择一个渠道", "至少选择一个目标渠道再生成内容");
+    showToast("Select a channel", "Choose at least one target channel before generating content");
     return;
   }
   const snapshot = getBillingSnapshot();
@@ -2858,34 +2870,34 @@ function generateContentPack() {
   persist();
   updateProfileSummary();
   renderStudio();
-  showToast(`已生成 ${generatedAssets.length} 个版本`, "内容已按渠道格式拆分，等待加入审核队列");
+  showToast(`Generated ${generatedAssets.length} versions`, "Content was adapted to each channel format and is awaiting queue review");
 }
 
 function buildChannelContent(project, channel, tone) {
-  const audience = project.audience || "目标用户";
+  const audience = project.audience || "the target audience";
   const name = project.name;
-  const tagline = project.tagline.replace(/[。.!！]+$/, "");
+  const tagline = project.tagline.replace(/[.!]+$/, "");
   const tonePrefix =
-    tone === "简洁直接"
-      ? "直接说重点："
-      : tone === "故事感"
-        ? "我们花了很长时间解决一个具体问题。"
-        : "我们把这件事当作工程问题来做：";
+    tone === "Concise"
+      ? "The short version:"
+      : tone === "Story-driven"
+        ? "We spent a long time working through one specific problem."
+        : "We approached this as an engineering problem:";
   const templates = {
     github: {
-      title: `${name} 发布：${tagline}`,
+      title: `${name} launch: ${tagline}`,
       body: `${name} is now available.\n\n${tagline}.\n\nThis release focuses on making the project practical for ${audience}: clear setup, reproducible examples, and operational guardrails from day one. The repository includes quickstart paths, architecture notes, and examples that mirror real production constraints.\n\nWhat is included:\n- A focused core with a small, inspectable API\n- End-to-end examples and benchmark notes\n- Troubleshooting guidance for common deployment paths\n\nIf your team is working on this problem, try the quickstart and share a reproducible issue or use case.`,
       tags: ["open-source", project.type.replace(/\s+/g, "-").toLowerCase()],
     },
     huggingface: {
       title: `${name} · ${tagline}`,
-      body: `${name} 面向 ${audience}，核心目标是：${tagline}。\n\n${tonePrefix}${project.type === "基础模型" ? "本次发布包含模型卡、推理示例、能力边界和评测说明。" : "本次发布提供可直接运行的示例、部署说明与关键能力边界。"}建议在使用前结合真实业务样本完成评估。\n\n适合场景：原型验证、内测工作流与需要快速接入的 AI 产品。欢迎通过讨论区提交可复现问题、评测结果和集成场景。`,
+      body: `${name} is designed for ${audience}. Its core goal is to ${tagline}.\n\n${tonePrefix} ${/foundation model/i.test(project.type) ? "This release includes a model card, inference examples, capability boundaries, and evaluation notes." : "This release provides runnable examples, deployment guidance, and clear capability boundaries."} Evaluate it against representative business samples before production use.\n\nIt is suited to prototyping, internal workflow validation, and AI products that need a fast integration path. Share reproducible issues, benchmark results, and integration scenarios in the discussion area.`,
       tags: ["ai", "open-source", shortSlug(project.type)],
     },
     modelscope: {
-      title: `${name}：面向${audience}的${project.type}`,
-      body: `【项目简介】\n${name} 的核心价值是：${tagline}。\n\n【适用人群】\n${audience}。\n\n【本次发布】\n提供快速体验入口、关键能力说明与部署建议。项目更关注真实工作流中的可用性，而不是只展示单一 Demo。\n\n【建议下一步】\n从示例开始验证，再使用你的业务数据检查效果、延迟与资源占用。遇到可复现问题，欢迎附上环境信息提交反馈。`,
-      tags: ["中文", "模型", shortSlug(project.type)],
+      title: `${name}: a ${project.type} for ${audience}`,
+      body: `PROJECT OVERVIEW\n${name} delivers one core value: ${tagline}.\n\nWHO IT IS FOR\n${audience}.\n\nTHIS RELEASE\nA quick trial path, key capability notes, and deployment guidance are included. The project prioritizes usefulness in real workflows rather than a single polished demo.\n\nNEXT STEP\nStart with the examples, then use your own data to evaluate quality, latency, and resource usage. If you encounter a reproducible issue, include environment details in your report.`,
+      tags: ["model", "ai", shortSlug(project.type)],
     },
     hackernews: {
       title: `Show HN: ${name} – ${tagline}`,
@@ -2898,39 +2910,39 @@ function buildChannelContent(project, channel, tone) {
       tags: [],
     },
     v2ex: {
-      title: `分享一个我们做的${project.type}：${name}`,
-      body: `最近在解决一个面向${audience}的具体问题，做出了 ${name}。\n\n一句话介绍：${tagline}。\n\n这次发布主要想把它做成能真正进入工作流的东西，所以优先补了示例、边界说明和失败时的诊断信息。不是“一键解决所有问题”的定位，更适合先在明确场景里验证。\n\n欢迎从使用体验、技术方案和部署成本几个角度拍砖。`,
-      tags: ["分享创造"],
+      title: `Sharing ${name}, a ${project.type} we built`,
+      body: `We recently worked through a specific problem for ${audience} and built ${name}.\n\nOne-line summary: ${tagline}.\n\nOur priority for this release was making it useful inside real workflows, so we focused first on examples, explicit boundaries, and useful diagnostics when something fails. It is not positioned as a one-click solution for every problem; it is better suited to validation within a clearly defined scenario.\n\nFeedback on usability, the technical approach, and deployment cost is welcome.`,
+      tags: ["show-and-tell"],
     },
     poe: {
-      title: `${name}｜${tagline}`,
-      body: `你好，我是 ${name}。\n\n我可以帮助${audience}完成与「${tagline}」相关的任务。\n\n使用建议：先输入你的目标、已有材料与限制条件，我会给出结构化结果；需要继续调整时，直接告诉我偏好的方向。当前版本更适合明确任务的辅助与快速迭代。`,
+      title: `${name} | ${tagline}`,
+      body: `Hello, I am ${name}.\n\nI help ${audience} complete tasks related to "${tagline}."\n\nSuggested workflow: provide your goal, existing materials, and constraints to receive a structured result. If you need changes, tell me which direction you prefer. The current version is best suited to well-defined tasks and rapid iteration.`,
       tags: [],
     },
     coze: {
-      title: `${name} · ${project.type}体验入口`,
-      body: `用 ${name} 把「${tagline}」变成可重复执行的工作流。\n\n适合${audience}。开始对话后，描述你的目标与当前材料，Agent 会按步骤完成分析、整理与输出。需要接入业务数据时，可在工作流中替换对应节点。`,
+      title: `${name} · ${project.type} experience`,
+      body: `Use ${name} to turn "${tagline}" into a repeatable workflow.\n\nBuilt for ${audience}. After starting a conversation, describe your goal and current materials, and the agent will analyze, organize, and produce the output step by step. When business data is required, replace the relevant workflow node with your own integration.`,
       tags: [],
     },
     dify: {
-      title: `${name}：${tagline}`,
-      body: `${name} 是一个面向${audience}的 ${project.type} 模板/插件。\n\n它把输入校验、核心处理、结果检查拆成可观察的节点，方便团队替换模型、接入知识库或加入人工审核。建议先在测试工作区验证输入输出，再发布到生产环境。`,
+      title: `${name}: ${tagline}`,
+      body: `${name} is a ${project.type} template and plugin for ${audience}.\n\nIt separates input validation, core processing, and output checks into observable nodes, making it easier for teams to replace models, connect knowledge bases, or add human review. Validate inputs and outputs in a test workspace before deploying to production.`,
       tags: [],
     },
     zhihu: {
-      title: `如何为${audience}解决这个问题？我们做了 ${name}`,
-      body: `在讨论 ${name} 之前，先说清楚它要解决的问题：${tagline}。\n\n很多同类方案的问题不在演示，而在边界。真实工作流需要知道输入不完整时怎么办、失败能否复现、成本是否可解释。我们在第一版里优先处理这些问题。\n\n${name} 适合${audience}先做明确场景的验证。它不替代业务判断，但能把重复工作变成可检查的流程。后续我们会继续公开评测口径与限制。`,
+      title: `How do you solve this problem for ${audience}? We built ${name}`,
+      body: `Before discussing ${name}, it helps to state the problem clearly: ${tagline}.\n\nThe weakness in many comparable tools is not the demo; it is the boundaries. Real workflows need answers about incomplete input, reproducible failures, and explainable cost. We prioritized those questions in the first release.\n\n${name} is intended for ${audience} to validate a clearly defined scenario. It does not replace business judgment, but it can turn repetitive work into an inspectable process. We will continue to publish our evaluation method and limitations.`,
       tags: [],
     },
     jike: {
-      title: `做了一个给${audience}的新工具：${name}`,
-      body: `${tagline}。\n\n这次最想解决的，是让结果从“看起来很厉害”变成“真的能进入日常工作流”。第一版已经把示例、限制和诊断信息放在一起。\n\n适合拿来验证一个明确场景，也欢迎写下你最想让它做的下一步。`,
+      title: `A new tool for ${audience}: ${name}`,
+      body: `${tagline}.\n\nOur main goal is to move beyond an impressive-looking demo and make the result genuinely useful in daily workflows. The first release includes examples, limitations, and diagnostics in one place.\n\nIt is ready for validation in a clearly defined scenario. We would also like to hear what you want it to do next.`,
       tags: ["AI", project.type],
     },
     xiaohongshu: {
-      title: `给${audience}的效率新搭子｜${name}`,
-      body: `最近试了一个新思路：${tagline}。\n\n${name} 比较适合从一个具体任务开始，不需要先搭一套很重的流程。我的建议是先准备真实材料，用小范围结果判断是否值得继续接入。\n\n它不会替你做完所有判断，但能明显缩短从想法到第一版结果的路径。\n\n#AI工具 #效率工具 #${project.type}`,
-      tags: ["AI工具", "效率工具"],
+      title: `A faster workflow for ${audience} | ${name}`,
+      body: `We recently tested a new approach: ${tagline}.\n\n${name} works best when you start with one concrete task instead of building a heavy process first. Start with real materials, then use the initial results to decide whether a deeper integration is worthwhile.\n\nIt will not make every judgment for you, but it can shorten the path from an idea to a useful first result.\n\n#AItools #productivity #${project.type.replace(/\s+/g, "")}`,
+      tags: ["AI tools", "productivity"],
     },
     futurepedia: {
       title: `${name} — ${tagline}`,
@@ -2946,7 +2958,7 @@ function buildChannelContent(project, channel, tone) {
   return (
     templates[channel.id] || {
       title: `${name} · ${tagline}`,
-      body: `${tagline}。\n\n${name} 面向 ${audience}，提供可验证、可编辑的 ${project.type} 使用路径。欢迎查看项目并提交反馈。`,
+      body: `${tagline}.\n\n${name} gives ${audience} a verifiable, editable path for using this ${project.type}. Explore the project and share your feedback.`,
       tags: [],
     }
   );
@@ -2961,7 +2973,7 @@ function queueAsset(assetId) {
   if (existing) {
     persist();
     render();
-    showToast("已经在队列中", "这条内容不需要重复加入");
+    showToast("Already in the queue", "This content does not need to be added again");
     return;
   }
   state.queue.unshift({
@@ -2975,7 +2987,7 @@ function queueAsset(assetId) {
   });
   persist();
   render();
-  showToast("已加入发布队列", "状态为待审核，不会自动对外发布");
+  showToast("Added to the publishing queue", "The status is Pending; nothing will be published automatically");
 }
 
 function approveQueueItem(queueId) {
@@ -2985,7 +2997,7 @@ function approveQueueItem(queueId) {
     item.status = "ready";
     const asset = getAsset(item.assetId);
     if (asset) asset.status = item.status;
-    showToast("审核已通过", "内容可以进入排期，仍需明确选择发布时间");
+    showToast("Approved", "The content is ready to schedule; you still need to select a publishing time");
   } else if (item.status === "ready") {
     openScheduleModal(queueId);
     return;
@@ -3008,7 +3020,7 @@ function openScheduleModal(queueId) {
       <span class="channel-mark" style="--channel-color:${channel.color};--channel-bg:${channel.bg}">${escapeHTML(channelShort(channel))}</span>
       <div>
         <strong>${escapeHTML(asset.title)}</strong>
-        <span>${escapeHTML(project?.name || "未知项目")} · ${escapeHTML(channel.name)}</span>
+        <span>${escapeHTML(project?.name || "Unknown project")} · ${escapeHTML(channel.name)}</span>
       </div>
     </div>
     ${statusBadge(item.status)}
@@ -3028,7 +3040,7 @@ function handleScheduleSubmit(event) {
   if (!item || !scheduleAtInput.value) return;
   const scheduledAt = new Date(scheduleAtInput.value);
   if (Number.isNaN(scheduledAt.getTime()) || scheduledAt.getTime() < Date.now() + 60_000) {
-    showToast("发布时间不可用", "请选择晚于当前时间至少一分钟的发布窗口");
+    showToast("Publishing time unavailable", "Choose a publishing window at least one minute in the future");
     scheduleAtInput.focus();
     return;
   }
@@ -3040,7 +3052,7 @@ function handleScheduleSubmit(event) {
   persist();
   closeAllModals();
   render();
-  showToast("已安排发布窗口", formatDateTime(item.scheduledAt));
+  showToast("Publishing window scheduled", formatDateTime(item.scheduledAt));
 }
 
 function getDefaultScheduleDate() {
@@ -3064,14 +3076,14 @@ function markPublished(queueId) {
   if (asset) asset.status = "published";
   persist();
   render();
-  showToast("已记录人工发布", "系统不会声称完成了未经授权的平台操作");
+  showToast("Manual publication recorded", "The system will not claim that an unauthorized platform action occurred");
 }
 
 function removeQueueItem(queueId) {
   state.queue = state.queue.filter((entry) => entry.id !== queueId);
   persist();
   render();
-  showToast("已从队列移除", "原始内容资产仍然保留");
+  showToast("Removed from queue", "The original content asset is still available");
 }
 
 function openCommand() {
@@ -3095,8 +3107,8 @@ function getCommandResults(query) {
     {
       type: "action",
       icon: "plus",
-      title: "接入新项目",
-      subtitle: "创建项目并生成渠道建议",
+      title: "Connect a new project",
+      subtitle: "Create a project and generate channel recommendations",
       action: () => {
         closeCommand();
         openIntake();
@@ -3105,8 +3117,8 @@ function getCommandResults(query) {
     {
       type: "action",
       icon: "wand-sparkles",
-      title: "生成渠道内容",
-      subtitle: "打开内容工坊",
+      title: "Generate channel content",
+      subtitle: "Open Content Studio",
       action: () => {
         closeCommand();
         switchView("studio");
@@ -3115,8 +3127,8 @@ function getCommandResults(query) {
     {
       type: "action",
       icon: "scan-search",
-      title: "优化 AI 搜索发现",
-      subtitle: "检查可发现性、模拟问题并生成索引包",
+      title: "Improve AI search discovery",
+      subtitle: "Check discoverability, simulate questions, and generate an index pack",
       action: () => {
         closeCommand();
         switchView("discovery");
@@ -3125,8 +3137,8 @@ function getCommandResults(query) {
     {
       type: "action",
       icon: "send",
-      title: "查看发布队列",
-      subtitle: "审核与排期",
+      title: "View the publishing queue",
+      subtitle: "Review and schedule content",
       action: () => {
         closeCommand();
         switchView("queue");
@@ -3166,10 +3178,10 @@ function renderCommandResults(query) {
   const results = getCommandResults(query);
   commandFocus = Math.min(commandFocus, Math.max(results.length - 1, 0));
   if (!results.length) {
-    commandResults.innerHTML = `<div class="command-empty">没有找到相关内容</div>`;
+    commandResults.innerHTML = `<div class="command-empty">No matching results</div>`;
     return;
   }
-  const groups = { action: "快捷操作", project: "项目", channel: "渠道" };
+  const groups = { action: "Quick actions", project: "Projects", channel: "Channels" };
   let previousType = "";
   commandResults.innerHTML = results
     .map((result, index) => {
@@ -3222,7 +3234,7 @@ function showToast(title, message) {
   toast.innerHTML = `
     <span class="toast-icon">${icon("sparkles")}</span>
     <span class="toast-copy"><strong>${escapeHTML(title)}</strong><span>${escapeHTML(message)}</span></span>
-    <button class="toast-close" type="button" aria-label="关闭通知">${icon("x")}</button>
+    <button class="toast-close" type="button" aria-label="Dismiss notification">${icon("x")}</button>
   `;
   toast.querySelector(".toast-close").addEventListener("click", () => toast.remove());
   toastRegion.appendChild(toast);
@@ -3237,7 +3249,7 @@ function showToast(title, message) {
 function copyToClipboard(text, successMessage) {
   navigator.clipboard
     .writeText(text)
-    .then(() => showToast(successMessage, "可以直接粘贴到你确认过的发布平台"))
+    .then(() => showToast(successMessage, "You can now paste it into the publishing platform you approved"))
     .catch(() => {
       const textarea = document.createElement("textarea");
       textarea.value = text;
@@ -3245,7 +3257,7 @@ function copyToClipboard(text, successMessage) {
       textarea.select();
       document.execCommand("copy");
       textarea.remove();
-      showToast(successMessage, "可以直接粘贴到你确认过的发布平台");
+      showToast(successMessage, "You can now paste it into the publishing platform you approved");
     });
 }
 
@@ -3280,13 +3292,13 @@ function getProjectChannelFit(projectId, channel) {
   const project = getProject(projectId);
   if (!project) return channel.fit;
   let adjustment = 0;
-  const isModel = /模型|model/.test(`${project.type} ${project.tagline}`.toLowerCase());
-  const isOpenSource = /开源|swift|framework|框架|sdk/i.test(`${project.type} ${project.tagline}`);
-  const isAgent = /agent|智能体|bot|工作流/i.test(`${project.type} ${project.tagline}`);
+  const isModel = /model|multimodal|llm/.test(`${project.type} ${project.tagline}`.toLowerCase());
+  const isOpenSource = /open.source|swift|framework|sdk/i.test(`${project.type} ${project.tagline}`);
+  const isAgent = /agent|bot|workflow|automation/i.test(`${project.type} ${project.tagline}`);
   if (isModel && ["huggingface", "modelscope", "zhihu"].includes(channel.id)) adjustment += 5;
   if (isOpenSource && ["github", "hackernews", "v2ex"].includes(channel.id)) adjustment += 4;
   if (isAgent && ["coze", "poe", "dify"].includes(channel.id)) adjustment += 4;
-  if (/中文|国内/.test(project.audience) && ["modelscope", "v2ex", "jike", "zhihu"].includes(channel.id)) adjustment += 3;
+  if (/consumer|creator|community|social/i.test(project.audience) && ["modelscope", "v2ex", "jike", "zhihu"].includes(channel.id)) adjustment += 3;
   return Math.min(99, channel.fit + adjustment);
 }
 
@@ -3306,19 +3318,19 @@ function statusBadge(status) {
 function statusLabel(status) {
   return (
     {
-      review: "待审核",
-      ready: "可发布",
-      scheduled: "已排期",
-      published: "已发布",
-    }[status] || "草稿"
+      review: "Pending",
+      ready: "Ready",
+      scheduled: "Scheduled",
+      published: "Published",
+    }[status] || "Draft"
   );
 }
 
 function modeBadge(mode) {
   const modes = {
-    api: { className: "mode-api", label: "API 接入" },
-    assisted: { className: "mode-assisted", label: "浏览器辅助" },
-    manual: { className: "mode-manual", label: "人工发布" },
+    api: { className: "mode-api", label: "API access" },
+    assisted: { className: "mode-assisted", label: "Browser-assisted" },
+    manual: { className: "mode-manual", label: "Manual publishing" },
   };
   const selected = modes[mode] || modes.manual;
   return `<span class="mode-badge ${selected.className}">${selected.label}</span>`;
@@ -3335,17 +3347,17 @@ function channelShort(channel) {
     dify: "D",
     hackernews: "HN",
     v2ex: "V2",
-    jike: "即",
-    zhihu: "知",
+    jike: "J",
+    zhihu: "Z",
     futurepedia: "FP",
     theresanaiforthat: "TAA",
-    xiaohongshu: "红",
+    xiaohongshu: "X",
   };
   return overrides[channel.id] || initials(channel.name);
 }
 
 function shortChannelName(name) {
-  return name.replace("Hugging Face", "HF").replace("Product Hunt", "PH").replace("ModelScope 魔搭", "ModelScope");
+  return name.replace("Hugging Face", "HF").replace("Product Hunt", "PH");
 }
 
 function initials(value) {
@@ -3360,12 +3372,12 @@ function shortSlug(value) {
   return String(value)
     .toLowerCase()
     .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9\u4e00-\u9fa5-]/g, "");
+    .replace(/[^a-z0-9-]/g, "");
 }
 
 function formatDateTime(value) {
-  if (!value) return "未排期";
-  return new Intl.DateTimeFormat("zh-CN", {
+  if (!value) return "Not scheduled";
+  return new Intl.DateTimeFormat("en-US", {
     month: "numeric",
     day: "numeric",
     hour: "2-digit",

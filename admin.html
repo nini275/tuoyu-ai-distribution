@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex,nofollow" />
     <meta
       name="description"
-      content="拓域 MCP 工具目录审核后台，用于审核提交项目和管理推广标记。"
+      content="TuoYu MCP Catalog review console for reviewing submitted projects and managing paid placement."
     />
-    <title>拓域 MCP 目录审核后台</title>
+    <title>TuoYu MCP Catalog Review Console</title>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./catalog.css" />
@@ -16,7 +16,7 @@
   </head>
   <body class="admin-page">
     <header class="catalog-topbar">
-      <a class="catalog-brand" href="./catalog.html" aria-label="返回工具目录">
+      <a class="catalog-brand" href="./catalog.html" aria-label="Back to tool catalog">
         <span class="brand-mark">
           <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
             <path d="M7 23.5V8.5h8.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
@@ -26,16 +26,16 @@
           </svg>
         </span>
         <span>
-          <strong>拓域 MCP · Admin</strong>
+          <strong>TuoYu MCP · Admin</strong>
           <small>REVIEW CONSOLE</small>
         </span>
       </a>
-      <nav class="catalog-topnav" aria-label="后台导航">
-        <a href="./catalog.html">返回目录</a>
-        <a href="./">工作台</a>
+      <nav class="catalog-topnav" aria-label="Admin navigation">
+        <a href="./catalog.html">Catalog</a>
+        <a href="./">Workspace</a>
         <button class="admin-header-logout" id="admin-logout" type="button" hidden>
           <i data-lucide="log-out"></i>
-          退出
+          Sign out
         </button>
       </nav>
     </header>
@@ -44,14 +44,14 @@
       <section class="admin-hero" aria-labelledby="admin-title">
         <div>
           <span class="catalog-kicker">HUMAN REVIEW REQUIRED</span>
-          <h1 id="admin-title">目录审核</h1>
-          <p>审核项目资料、核验指标，并控制已审核项目的推广标记。</p>
+          <h1 id="admin-title">Catalog review</h1>
+          <p>Review project details, verify metrics, and manage paid placement for approved listings.</p>
         </div>
         <div class="admin-boundary">
           <i data-lucide="shield-alert"></i>
           <div>
-            <strong>当前为本地管理后台</strong>
-            <span>Bearer Token 只保存在当前标签页会话中；正式部署需接入身份、权限和审计。</span>
+            <strong>Local administration console</strong>
+            <span>The bearer token is stored only for this tab session. Production deployment requires identity, authorization, and audit controls.</span>
           </div>
         </div>
       </section>
@@ -59,12 +59,12 @@
       <section class="admin-auth-panel" id="admin-auth-panel" aria-labelledby="admin-auth-title">
         <div>
           <span class="catalog-section-label">ADMIN ACCESS</span>
-          <h2 id="admin-auth-title">连接审核服务</h2>
-          <p>使用启动服务器时设置的 <code>TUOYU_ADMIN_TOKEN</code>。</p>
+          <h2 id="admin-auth-title">Connect to review service</h2>
+          <p>Use the <code>TUOYU_ADMIN_TOKEN</code> configured when starting the server.</p>
         </div>
         <form id="admin-auth-form">
           <label>
-            <span>管理员 Token</span>
+            <span>Admin token</span>
             <input
               id="admin-token-input"
               name="token"
@@ -73,37 +73,37 @@
               minlength="16"
               autocomplete="off"
               spellcheck="false"
-              placeholder="输入仅本次会话使用的 Token"
+              placeholder="Enter the token for this session"
             />
           </label>
           <button class="button button--primary" type="submit" id="admin-connect-button">
             <i data-lucide="key-round"></i>
-            <span>连接后台</span>
+            <span>Connect</span>
           </button>
         </form>
         <div class="admin-message" id="admin-auth-message" role="status" hidden></div>
       </section>
 
       <section class="admin-dashboard" id="admin-dashboard" hidden aria-labelledby="admin-list-title">
-        <div class="admin-stats" aria-label="项目状态统计">
+        <div class="admin-stats" aria-label="Project status statistics">
           <div>
-            <span>待审核</span>
+            <span>Pending</span>
             <strong id="admin-stat-pending">0</strong>
           </div>
           <div>
-            <span>已通过</span>
+            <span>Approved</span>
             <strong id="admin-stat-approved">0</strong>
           </div>
           <div>
-            <span>已拒绝</span>
+            <span>Rejected</span>
             <strong id="admin-stat-rejected">0</strong>
           </div>
           <div>
-            <span>已暂停</span>
+            <span>Paused</span>
             <strong id="admin-stat-paused">0</strong>
           </div>
           <div class="admin-stat-promoted">
-            <span>推广中</span>
+            <span>Promoted</span>
             <strong id="admin-stat-promoted">0</strong>
           </div>
         </div>
@@ -112,31 +112,31 @@
           <div class="admin-list-heading">
             <div>
               <span class="catalog-section-label">CATALOG RECORDS</span>
-              <h2 id="admin-list-title">项目记录</h2>
+              <h2 id="admin-list-title">Project records</h2>
             </div>
             <button class="button button--quiet" id="admin-refresh" type="button">
               <i data-lucide="refresh-cw"></i>
-              <span>刷新</span>
+              <span>Refresh</span>
             </button>
           </div>
 
           <div class="admin-filters">
             <label class="catalog-search-field">
               <i data-lucide="search"></i>
-              <span class="sr-only">搜索项目</span>
-              <input id="admin-search-input" type="search" placeholder="搜索名称、描述、分类或标签" />
+              <span class="sr-only">Search projects</span>
+              <input id="admin-search-input" type="search" placeholder="Search by name, description, category, or tag" />
             </label>
             <label class="catalog-select-field">
-              <span class="sr-only">审核状态</span>
+              <span class="sr-only">Review status</span>
               <select id="admin-status-filter">
-                <option value="pending">待审核</option>
-                <option value="approved">已通过</option>
-                <option value="rejected">已拒绝</option>
-                <option value="paused">已暂停</option>
-                <option value="all">全部状态</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="paused">Paused</option>
+                <option value="all">All statuses</option>
               </select>
             </label>
-            <span class="admin-record-count" id="admin-record-count">0 个项目</span>
+            <span class="admin-record-count" id="admin-record-count">0 projects</span>
           </div>
 
           <div class="admin-message" id="admin-list-message" role="status" hidden></div>
@@ -147,13 +147,13 @@
 
     <footer class="catalog-footer">
       <div>
-        <strong>拓域 · Rita</strong>
+        <strong>TuoYu · Rita</strong>
         <span>© 2026 Yan Sihan</span>
       </div>
-      <nav aria-label="后台相关声明">
-        <a href="./MCP.md">MCP 接入</a>
-        <a href="./PRIVACY.md">隐私说明</a>
-        <a href="./TRADEMARK.md">商标政策</a>
+      <nav aria-label="Admin policies">
+        <a href="./MCP.md">MCP integration</a>
+        <a href="./PRIVACY.md">Privacy</a>
+        <a href="./TRADEMARK.md">Trademark policy</a>
       </nav>
     </footer>
 

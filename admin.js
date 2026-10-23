@@ -22,16 +22,16 @@ const state = {
 };
 
 const statusLabels = {
-  pending: "待审核",
-  approved: "已通过",
-  rejected: "已拒绝",
-  paused: "已暂停",
+  pending: "Pending",
+  approved: "Approved",
+  rejected: "Rejected",
+  paused: "Paused",
 };
 
 const promotionLabels = {
-  none: "无推广",
-  boost: "加权 +8",
-  featured: "重点推广 +15",
+  none: "No promotion",
+  boost: "Paid promotion +8",
+  featured: "Featured promotion +15",
 };
 
 function refreshIcons() {
@@ -53,10 +53,10 @@ function escapeHTML(value) {
 }
 
 function formatDate(value, includeTime = false) {
-  if (!value) return "未记录";
+  if (!value) return "Not recorded";
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "未记录";
-  return new Intl.DateTimeFormat("zh-CN", {
+  if (Number.isNaN(date.getTime())) return "Not recorded";
+  return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -105,10 +105,10 @@ async function adminRequest(path, options = {}) {
   });
   const payload = await response.json().catch(() => ({}));
   if (response.status === 401) {
-    lockDashboard("管理员 Token 无效或已失效，请重新连接。");
+    lockDashboard("The admin token is invalid or has expired. Please reconnect.");
   }
   if (!response.ok) {
-    throw new Error(payload.message || `请求失败（HTTP ${response.status}）`);
+    throw new Error(payload.message || `Request failed (HTTP ${response.status})`);
   }
   return payload;
 }
@@ -151,11 +151,11 @@ function renderTool(tool) {
     ? `<a href="${escapeHTML(tool.repoUrl)}" target="_blank" rel="noreferrer">GitHub <i data-lucide="external-link"></i></a>`
     : "";
   const websiteLink = tool.websiteUrl
-    ? `<a href="${escapeHTML(tool.websiteUrl)}" target="_blank" rel="noreferrer">官网 <i data-lucide="external-link"></i></a>`
+    ? `<a href="${escapeHTML(tool.websiteUrl)}" target="_blank" rel="noreferrer">Website <i data-lucide="external-link"></i></a>`
     : "";
   const flags = tool.reviewFlags.length
     ? tool.reviewFlags.map((flag) => `<span>${escapeHTML(flag)}</span>`).join("")
-    : "<span>无自动标记</span>";
+    : "<span>No automated flags</span>";
 
   return `
     <article class="admin-tool-card">
@@ -165,7 +165,7 @@ function renderTool(tool) {
             <div class="admin-tool-title-line">
               <h3>${escapeHTML(tool.name)}</h3>
               <span class="admin-status-badge" data-status="${escapeHTML(tool.status)}">${escapeHTML(statusLabels[tool.status] || tool.status)}</span>
-              ${tool.isSeed ? "<span class=\"admin-seed-badge\">种子记录</span>" : ""}
+              ${tool.isSeed ? "<span class=\"admin-seed-badge\">Seed record</span>" : ""}
             </div>
             <span class="admin-tool-category">${escapeHTML(tool.category)}</span>
           </div>
@@ -174,20 +174,20 @@ function renderTool(tool) {
 
         <p class="admin-tool-description">${escapeHTML(tool.description)}</p>
 
-        <div class="admin-review-flags" aria-label="自动审核标记">
-          <strong>自动标记</strong>
+        <div class="admin-review-flags" aria-label="Automated review flags">
+          <strong>Automated flags</strong>
           ${flags}
         </div>
 
         <div class="admin-tool-metadata">
-          <span>提交：${escapeHTML(formatDate(tool.submittedAt, true))}</span>
-          <span>更新：${escapeHTML(formatDate(tool.updatedAt, true))}</span>
-          <span>项目 ID：${escapeHTML(tool.id)}</span>
+          <span>Submitted: ${escapeHTML(formatDate(tool.submittedAt, true))}</span>
+          <span>Updated: ${escapeHTML(formatDate(tool.updatedAt, true))}</span>
+          <span>Project ID: ${escapeHTML(tool.id)}</span>
         </div>
 
         <div class="admin-review-grid">
           <label>
-            <span>审核状态</span>
+            <span>Review status</span>
             <select name="status">
               ${Object.entries(statusLabels)
                 .map(
@@ -198,7 +198,7 @@ function renderTool(tool) {
             </select>
           </label>
           <label>
-            <span>推广等级</span>
+            <span>Promotion tier</span>
             <select name="promotionTier">
               ${Object.entries(promotionLabels)
                 .map(
@@ -210,19 +210,19 @@ function renderTool(tool) {
           </label>
           <label>
             <span>GitHub Stars</span>
-            <input name="githubStars" type="number" min="0" max="1000000000" step="1" value="${tool.githubStars ?? ""}" placeholder="核验后填写" />
+            <input name="githubStars" type="number" min="0" max="1000000000" step="1" value="${tool.githubStars ?? ""}" placeholder="Enter the verified value" />
           </label>
           <label>
-            <span>最近更新时间</span>
+            <span>Last updated</span>
             <input name="lastUpdated" type="date" value="${escapeHTML(lastUpdated)}" />
           </label>
           <label class="admin-promotion-toggle">
             <input name="promotionActive" type="checkbox" ${tool.promotionActive ? "checked" : ""} />
-            <span>启用付费推广加权</span>
+            <span>Enable paid placement boost</span>
           </label>
           <label class="admin-note-field">
-            <span>审核备注</span>
-            <textarea name="reviewNote" rows="3" maxlength="1000" placeholder="记录链接、许可证、指标或推广核验结果">${escapeHTML(tool.reviewNote)}</textarea>
+            <span>Review note</span>
+            <textarea name="reviewNote" rows="3" maxlength="1000" placeholder="Record link, license, metric, or promotion verification results">${escapeHTML(tool.reviewNote)}</textarea>
           </label>
         </div>
 
@@ -231,15 +231,15 @@ function renderTool(tool) {
             class="admin-delete-button"
             type="button"
             data-action="delete"
-            aria-label="永久删除 ${escapeHTML(tool.name)}"
+            aria-label="Permanently delete ${escapeHTML(tool.name)}"
           >
             <i data-lucide="trash-2"></i>
-            <span>删除</span>
+            <span>Delete</span>
           </button>
           <span class="admin-save-message" role="status" hidden></span>
           <button class="button button--primary" type="submit">
             <i data-lucide="save"></i>
-            <span>保存审核</span>
+            <span>Save review</span>
           </button>
         </div>
       </form>
@@ -276,13 +276,13 @@ function renderTools() {
       .includes(query);
   });
 
-  recordCount.textContent = `${visible.length} 个项目`;
+  recordCount.textContent = `${visible.length} project${visible.length === 1 ? "" : "s"}`;
   if (!visible.length) {
     toolList.innerHTML = `
       <div class="catalog-empty">
         <i data-lucide="inbox"></i>
-        <strong>当前筛选没有项目</strong>
-        <span>切换状态或清除搜索关键词。</span>
+        <strong>No projects match the current filters</strong>
+        <span>Change the status filter or clear the search query.</span>
       </div>
     `;
     refreshIcons();
@@ -323,7 +323,7 @@ async function connect(event) {
   event.preventDefault();
   const token = tokenInput.value.trim();
   if (token.length < 16) {
-    showMessage(authMessage, "管理员 Token 至少需要 16 个字符。", "error");
+    showMessage(authMessage, "The admin token must contain at least 16 characters.", "error");
     return;
   }
   state.token = token;
@@ -333,7 +333,7 @@ async function connect(event) {
     const connected = await loadTools();
     if (connected && state.token) {
       storeToken(token);
-      showMessage(listMessage, "审核数据已载入。", "success");
+      showMessage(listMessage, "Review data loaded.", "success");
     }
   } finally {
     connectButton.disabled = false;
@@ -367,7 +367,7 @@ async function saveReview(form) {
     });
     state.tools = state.tools.map((tool) => (tool.id === id ? payload.tool : tool));
     renderTools();
-    showMessage(listMessage, `“${payload.tool.name}”的审核信息已保存。`, "success");
+    showMessage(listMessage, `Review information for "${payload.tool.name}" was saved.`, "success");
   } catch (error) {
     if (state.token) showMessage(message, error.message, "error");
   } finally {
@@ -386,7 +386,7 @@ async function deleteTool(button) {
   const name = tool?.name || id;
   if (
     !window.confirm(
-      `确定永久删除“${name}”？该项目的审核记录、推广状态和目录数据都会被删除，且无法撤销。`,
+      `Permanently delete "${name}"? Its review history, promotion status, and catalog data will be deleted without the ability to undo.`,
     )
   ) {
     return;
@@ -404,7 +404,7 @@ async function deleteTool(button) {
     });
     state.tools = state.tools.filter((item) => item.id !== id);
     renderTools();
-    showMessage(listMessage, `“${name}”已从目录中永久删除。`, "success");
+    showMessage(listMessage, `"${name}" was permanently deleted from the catalog.`, "success");
   } catch (error) {
     if (state.token) showMessage(message, error.message, "error");
   } finally {

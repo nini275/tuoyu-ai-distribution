@@ -12,6 +12,7 @@ const mimeTypes = {
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
+  ".webmanifest": "application/manifest+json; charset=utf-8",
   ".md": "text/markdown; charset=utf-8",
   ".svg": "image/svg+xml",
   ".png": "image/png",
@@ -25,6 +26,13 @@ const publicFiles = new Set([
   "app.js",
   "styles.css",
   "favicon.svg",
+  "manifest.webmanifest",
+  "service-worker.js",
+  "icons/icon-144.png",
+  "icons/icon-180.png",
+  "icons/icon-192.png",
+  "icons/icon-512.png",
+  "icons/icon-maskable-512.png",
   "catalog.html",
   "catalog.css",
   "catalog.js",
@@ -37,6 +45,7 @@ const publicFiles = new Set([
   "PRICING.md",
   "SUBSCRIPTION_TERMS.md",
   "STORE_PUBLISHING.md",
+  "STORE_PAYOUT.md",
   "PRIVACY.md",
   "COPYRIGHT.md",
   "TRADEMARK.md",
@@ -52,7 +61,7 @@ function sendText(response, statusCode, message, contentType = "text/plain; char
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "no-referrer",
     "Content-Security-Policy":
-      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'",
+      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'",
   });
   response.end(message);
 }
@@ -106,7 +115,7 @@ function createTuoyuServer(options = {}) {
             ? "text/plain; charset=utf-8"
             : "application/octet-stream");
 
-        response.writeHead(200, {
+        const headers = {
           "Content-Type": contentType,
           "Content-Length": data.length,
           "Cache-Control": "no-cache",
@@ -114,8 +123,12 @@ function createTuoyuServer(options = {}) {
           "Referrer-Policy": "no-referrer",
           "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
           "Content-Security-Policy":
-            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'",
-        });
+            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'",
+        };
+        if (fileName === "service-worker.js") {
+          headers["Service-Worker-Allowed"] = "/";
+        }
+        response.writeHead(200, headers);
         response.end(request.method === "HEAD" ? undefined : data);
       });
     } catch (error) {
