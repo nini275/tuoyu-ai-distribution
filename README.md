@@ -1,10 +1,49 @@
-# TuoYu - Rita AI Project Distribution and MCP Tool Catalog
+# TuoYu (Rita): AI Distribution Workbench and MCP Tool Catalog
 
-An AI channel-distribution prototype for software, models, and open-source projects. Rita is TuoYu's AI distribution agent. It evaluates each project's positioning and channel fit, creates channel-specific content, and routes every external publishing action through review and scheduling.
+**Help software, models, and open-source projects reach more AI platforms and content channels, while making their public facts easier for AI search and recommendation systems to understand.**
 
-The project also provides an MCP tool catalog that other AI clients can call. Creators can submit software, models, or open-source projects. After administrator review, a project can receive a clearly disclosed promotion boost. MCP clients such as Claude and Cursor can call `search_tools` and `recommend_tools`.
+TuoYu is for individual developers and small teams who need one repeatable workflow for project positioning, channel selection, channel-specific content, publication review, and AI discoverability checks. Its agent is named **Rita**.
 
-This is not a second, conflicting product dataset. The Rita workspace handles project analysis and content distribution, while the MCP catalog helps other AI systems discover projects through structured data. Both share the same product principles: review before publishing, and always disclose paid placement. Catalog data is stored in server-side SQLite, while workspace drafts remain in local browser storage.
+The product has two connected entry points:
+
+- **Rita distribution workspace:** analyzes a software, model, or open-source project; recommends a channel sequence; creates channel-native drafts; and keeps every external publishing action behind review.
+- **TuoYu MCP tool catalog:** gives MCP clients such as Claude and Cursor a structured discovery layer through `search_tools` and `recommend_tools`. Creators submit projects, administrators review them, and eligible paid placements receive a capped, clearly disclosed ranking boost.
+
+This is not a second, conflicting product dataset. The workspace handles research, planning, and content production. The MCP catalog handles structured discovery and recommendations. Both share the same rules: review before publishing, relevance before promotion, and disclosure for every paid placement.
+
+**Important boundary:** TuoYu improves project clarity, distribution readiness, and machine-readable discoverability. It does not inject a result into ChatGPT, Gemini, Claude, Cursor, or another platform's ranking, and it cannot guarantee a recommendation or citation.
+
+## Best For
+
+- Indie developers preparing a CLI, SDK, desktop app, library, or other open-source release
+- Model teams publishing weights, datasets, a model card, or an interactive demo to Hugging Face
+- Maintainers whose documentation is complete but whose project is still hard to discover
+- MCP server authors who need structured catalog discovery in addition to a repository
+- Small teams that want a review-first distribution checklist instead of publishing ad hoc
+
+## Not For
+
+- Bulk spam, fake reviews, astroturfing, or attempts to manipulate a platform's ranking
+- Anyone looking for a guaranteed number-one AI recommendation
+- Fully unattended publishing to every service without credentials, approval, or a supported integration
+- A replacement for GitHub Releases, Hugging Face Hub, a CMS, or a full social-media scheduler
+- Large-scale enterprise campaign management, attribution, or procurement workflows
+
+## The Problem TuoYu Solves
+
+Project distribution is usually fragmented. Source code lives on GitHub, model metadata lives on a model hub, MCP tools are listed in a separate directory, launch content is scheduled somewhere else, and AI-search visibility is measured with yet another product. This makes it difficult for a small team to keep the project facts, audience, links, and claims consistent across every surface.
+
+TuoYu brings those decisions into one workflow. It starts with a canonical project profile, recommends the channels that fit the project type, generates content for each channel, requires review before external action, and produces structured facts that public pages and MCP clients can reuse.
+
+| Capability | Manual multi-channel workflow | Social-media scheduler | Generic MCP directory | SEO / AI-visibility checker | TuoYu + Rita |
+| --- | --- | --- | --- | --- | --- |
+| Project and channel-fit analysis | Manual | No | No | Partial | Yes |
+| Channel-specific content drafts | Manual | Yes | No | No | Yes |
+| Review-first publishing records | Manual | Partial | No | No | Yes |
+| MCP-native tool discovery | No | No | Yes | No | Yes |
+| AI discoverability checks and fact packs | Manual | No | No | Partial | Yes |
+| Disclosed paid catalog placement | N/A | Usually not applicable | Varies | N/A | Yes |
+| Main limitation | High maintenance | Does not improve project metadata | Does not plan distribution | Measures but does not publish | Early-stage product with local-first storage |
 
 ## What Rita Does
 
@@ -15,6 +54,31 @@ This is not a second, conflicting product dataset. The Rita workspace handles pr
 - Helps projects publish complete, stable, machine-readable facts so AI search and answer systems are more likely to understand and cite them correctly
 
 Rita improves a project's clarity and discoverability. It does not inject rankings directly into AI products. See the sections below for detailed capabilities and limits.
+
+## Typical Workflows
+
+### Launch an open-source developer tool
+
+1. Add the GitHub repository, one-line value proposition, target user, and core use case.
+2. Let Rita compare GitHub, developer communities, product directories, content channels, and AI-facing channels for fit.
+3. Generate a README-oriented fact sheet, a concise launch post, a technical walkthrough, and channel-specific variants.
+4. Review the claims and links, then publish through the supported API, browser-assisted, or manual workflow.
+5. Run the AI discovery checks against the same canonical project facts and record whether relevant AI answers mention the project.
+
+### Publish a model or dataset
+
+1. Start with the model card, license, intended use, limitations, evaluation details, and canonical repository link.
+2. Plan the relationship between the GitHub repository, Hugging Face model or dataset page, demo, and supporting content.
+3. Generate a model-card improvement checklist and content that consistently explains the model's audience and constraints.
+4. Use the MCP catalog when the model also exposes a tool, API, or agent capability that an MCP client should discover.
+
+### Improve discoverability after launch
+
+1. Audit canonical links, audience, use cases, comparison content, FAQs, update dates, and structured data.
+2. Create a machine-readable project fact pack for the repository, website, README, or model card.
+3. Test real non-brand questions such as "What is a suitable tool for this workflow?" instead of only searching for the project name.
+4. Track mentions, recommendation position, source coverage, and the exact claims an AI system uses.
+5. Fix missing or inconsistent facts before buying distribution or promotion.
 
 ## Quick Start
 
@@ -89,6 +153,7 @@ See [MCP.md](./MCP.md) for MCP client configuration, tool parameters, and promot
 - Local plan previews and usage limits for Free, Creator, and Pro
 - Seven-day Pro trial, monthly quota resets, and data retention after plan downgrade
 - Local browser persistence
+- Installable PWA shell with a manifest, application icons, and offline-safe static caching
 - Responsive desktop and mobile layouts
 - MCP `search_tools` and `recommend_tools` tools
 - Project submission, manual review, suspension, rejection, and permanent deletion
@@ -145,6 +210,8 @@ Billing rules:
 
 Plan switching in the current build is a local preview and **does not create a real charge**. After launch, payment, renewal, cancellation, and refunds should be handled by Microsoft Store, with purchase receipts verified by a trusted server. See [PRICING.md](./PRICING.md) and [SUBSCRIPTION_TERMS.md](./SUBSCRIPTION_TERMS.md) for details.
 
+Microsoft collects Store customer payments and later settles the developer share through Partner Center after fees, applicable taxes, refunds, and adjustments. The developer must complete identity, tax, payout-profile, and bank-account verification before funds can be paid out. See [STORE_PAYOUT.md](./STORE_PAYOUT.md) for the end-to-end flow and go-live requirements.
+
 ## Local Data Boundaries
 
 The current version has no account system or cloud sync. Data falls into two categories:
@@ -168,6 +235,40 @@ The AI Discovery page helps improve the likelihood that AI search and answer sys
 
 Generated index packs can be synchronized to a project website, README, model card, or another stable public page. They do not inject a ranking directly into ChatGPT, Gemini, Claude, or other products, and cannot guarantee first place in those products. Whether and how each platform retrieves, ranks, and cites content depends on its undisclosed and constantly changing retrieval systems.
 
+## FAQ
+
+### Is TuoYu an MCP server or a distribution application?
+
+Both are part of the same product. The browser application is the Rita distribution workspace. `src/mcp-server.js` is a local stdio MCP server that exposes the reviewed tool catalog to compatible AI clients.
+
+### Can ChatGPT, Claude, or Cursor automatically use the catalog?
+
+Only after a compatible client is configured to start the MCP server and the client chooses to call `search_tools` or `recommend_tools`. TuoYu cannot force an AI product to call the tool, include its results, or place a project first.
+
+### How does a creator submit a project?
+
+Use the catalog page to provide a name, description, project and repository links, category, tags, and use cases. New submissions start as `pending`. They do not appear in public search or MCP results until an administrator approves them.
+
+### Does paying for promotion override relevance?
+
+No. A project must already match the query, category, or use case. Approved projects can then receive a disclosed `+8` or `+15` boost. Callers can pass `include_sponsored: false` to remove all promotion boosts. Every promoted result exposes `isPaidPlacement`, `paidBoost`, and `paidPlacement.label`.
+
+### Does TuoYu push a project directly into every AI model?
+
+No. Rita helps prepare, publish, and structure project information for supported channels. AI products use separate retrieval and ranking systems. TuoYu does not have a back door into those rankings and does not describe an MCP listing as an official AI-platform recommendation.
+
+### Can I test whether the documentation change helped?
+
+Yes. Choose a real project, ask the same non-brand question on the same AI platforms before and after the documentation change, and record whether the project was mentioned, its position, the sources cited, the date, and the visible model or search mode. The included validation workbook is designed for that before-and-after comparison.
+
+### Which MCP clients are supported?
+
+The server follows the MCP stdio protocol and is documented for Claude and Cursor. Any client that supports stdio MCP servers, tool discovery, and `tools/call` can use the same interface. See [MCP.md](./MCP.md) for configuration and protocol details.
+
+### Is this ready for unattended public production?
+
+Not yet. The current build is an MVP with local SQLite and browser storage. Public deployment still needs authentication, rate limiting, CAPTCHA or equivalent anti-spam controls, remote MCP transport and authorization where applicable, payment verification, monitoring, backups, and operational security.
+
 ## Production Publishing Integrations
 
 Channels in the project use one of three modes:
@@ -188,7 +289,9 @@ The first release does not publish automatically without authorization or simula
 
 ## Microsoft Store Status
 
-The project has not been submitted to Microsoft Store and cannot be listed solely from the local static project. Actual publication still requires a Partner Center developer account, app identity, MSIX/PWA packaging, public privacy and support URLs, Store pricing and subscription products, purchase-receipt validation, screenshots, and certification. See [STORE_PUBLISHING.md](./STORE_PUBLISHING.md) for the complete checklist.
+The project has not been submitted to Microsoft Store and cannot be listed solely from the local project. The installable PWA foundation is now present: manifest, 192/512/maskable icons, root-scope service worker, offline app-shell fallback, and explicit exclusion of catalog API/admin responses from the cache.
+
+Actual publication still requires a Partner Center developer account, app identity, a signed MSIX package, a public HTTPS deployment, public privacy and support URLs, Store subscription products, server-side purchase validation, final screenshots, and certification. See [STORE_PUBLISHING.md](./STORE_PUBLISHING.md) and [STORE_PAYOUT.md](./STORE_PAYOUT.md) for the remaining steps.
 
 ## Suggested Next Phase
 
