@@ -97,14 +97,14 @@ async function adminRequest(context, pathname, options = {}) {
 function submissionInput(overrides = {}) {
   const unique = randomUUID();
   return {
-    name: `测试项目 ${unique.slice(0, 8)}`,
+    name: `Test Project ${unique.slice(0, 8)}`,
     description:
-      "这是一个用于验证拓域目录审核、检索和 MCP 推荐流程的开源软件项目。它说明主要功能、适用用户、部署方式、使用边界与公开链接，便于审核人员判断质量和相关性。",
+      "This open-source software project validates the TuoYu catalog review, search, and MCP recommendation workflow. It documents the main features, intended users, deployment method, usage limits, and public links so reviewers can assess quality and relevance.",
     repoUrl: `https://github.com/tuoyu-test/${unique}`,
     websiteUrl: `https://example.com/projects/${unique}`,
-    category: "自动化测试",
-    tags: ["测试", `tag-${unique.slice(0, 8)}`],
-    useCases: ["验证项目发布审核流程"],
+    category: "Automation testing",
+    tags: ["test", `tag-${unique.slice(0, 8)}`],
+    useCases: ["Validate the project submission review process"],
     githubStars: 256,
     lastUpdated: "2026-10-01T00:00:00.000Z",
     ...overrides,
@@ -138,9 +138,9 @@ test("pending and rejected projects stay private until approved", async (t) => {
   const context = await startTestContext(t);
   const uniqueTag = `review-${randomUUID().slice(0, 8)}`;
   const input = submissionInput({
-    category: "审核隔离测试",
+    category: "Review isolation test",
     tags: [uniqueTag],
-    useCases: ["检索中文审核流程"],
+    useCases: ["Search the review workflow"],
   });
 
   const submitted = await submitProject(context, input);
@@ -167,14 +167,14 @@ test("pending and rejected projects stay private until approved", async (t) => {
 
   const approved = await reviewProject(context, id, {
     status: "approved",
-    reviewNote: "链接与描述已核验",
+    reviewNote: "Links and description verified",
   });
   assert.equal(approved.response.status, 200);
   assert.equal(approved.payload.tool.status, "approved");
 
   const approvedSearch = await searchCatalog(context, {
     q: uniqueTag,
-    category: "审核隔离测试",
+    category: "Review isolation test",
   });
   const approvedResult = approvedSearch.payload.results.find((result) => result.id === id);
   assert.ok(approvedResult);
@@ -191,8 +191,8 @@ test("pending and rejected projects stay private until approved", async (t) => {
   assert.equal(Object.hasOwn(publicDetail.payload.tool, "promotionActive"), false);
 
   const useCaseSearch = await searchCatalog(context, {
-    useCase: "检索中文审核流程",
-    category: "审核隔离测试",
+    useCase: "Search the review workflow",
+    category: "Review isolation test",
   });
   assert.ok(useCaseSearch.payload.results.some((result) => result.id === id));
 });
@@ -217,9 +217,9 @@ test("paid boosts are capped, disclosed, optional, and reset with tier none", as
   const context = await startTestContext(t);
   const sharedTag = `weighted-${randomUUID().slice(0, 8)}`;
   const sharedMetadata = {
-    category: "付费加权测试",
-    tags: [sharedTag, "推广"],
-    useCases: ["统一推广测试场景"],
+    category: "Paid weighting test",
+    tags: [sharedTag, "promotion"],
+    useCases: ["Shared promotion test scenario"],
     githubStars: 900,
     lastUpdated: "2026-10-10T00:00:00.000Z",
   };
@@ -263,7 +263,7 @@ test("paid boosts are capped, disclosed, optional, and reset with tier none", as
   assert.equal(featuredResult.ranking.paidBoost, 15);
   assert.equal(featuredResult.isPaidPlacement, true);
   assert.equal(featuredResult.paidPlacement.tier, "featured");
-  assert.equal(featuredResult.paidPlacement.label, "付费推广");
+  assert.equal(featuredResult.paidPlacement.label, "Paid promotion");
   assert.equal(boostResult.ranking.paidBoost, 8);
   assert.equal(boostResult.ranking.finalScore, boostResult.ranking.baseScore + 8);
 
@@ -331,9 +331,9 @@ test("MCP supports initialization, tool listing, search, and recommendations", a
     const sponsoredTag = `mcp-sponsored-${randomUUID().slice(0, 8)}`;
     const input = submissionInput({
       name: "MCP Sponsored Toolkit",
-      category: "MCP 测试",
+      category: "MCP testing",
       tags: [sponsoredTag],
-      useCases: ["通过 MCP 调用推荐工具"],
+      useCases: ["Recommend tools through MCP"],
     });
     const submitted = store.submit(input);
     store.review(submitted.id, {
@@ -363,7 +363,7 @@ test("MCP supports initialization, tool listing, search, and recommendations", a
     assert.equal(searched.result.structuredContent.results[0].ranking.paidBoost, 15);
     assert.equal(
       searched.result.structuredContent.results[0].paidPlacement.label,
-      "付费推广",
+      "Paid promotion",
     );
     assert.equal(
       JSON.parse(searched.result.content[0].text).results[0].isPaidPlacement,
@@ -393,7 +393,7 @@ test("MCP supports initialization, tool listing, search, and recommendations", a
         params: {
           name: "recommend_tools",
           arguments: {
-            need: "本地运行大模型并暴露 API",
+            need: "Run a large language model locally and expose an API",
             limit: 5,
           },
         },
@@ -481,10 +481,10 @@ test("SQLite catalog records survive a store restart", () => {
   let secondStore = null;
   try {
     firstStore = new CatalogStore(database.dbPath);
-    const submitted = firstStore.submit(submissionInput({ category: "持久化测试" }));
+    const submitted = firstStore.submit(submissionInput({ category: "Persistence test" }));
     firstStore.review(submitted.id, {
       status: "approved",
-      reviewNote: "重启后仍应存在",
+      reviewNote: "This record should survive a restart",
     });
     firstStore.close();
     firstStore = null;
@@ -493,8 +493,8 @@ test("SQLite catalog records survive a store restart", () => {
     const restored = secondStore.getById(submitted.id, { publicOnly: true });
     assert.ok(restored);
     assert.equal(restored.status, "approved");
-    assert.equal(restored.category, "持久化测试");
-    assert.equal(restored.reviewNote, "重启后仍应存在");
+    assert.equal(restored.category, "Persistence test");
+    assert.equal(restored.reviewNote, "This record should survive a restart");
   } finally {
     firstStore?.close();
     secondStore?.close();
