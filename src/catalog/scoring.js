@@ -10,15 +10,15 @@ const STOP_WORDS = new Set([
   "the",
   "to",
   "with",
-  "一个",
-  "一些",
-  "什么",
-  "可以",
-  "如何",
-  "帮我",
-  "推荐",
-  "有没有",
-  "适合",
+  "any",
+  "can",
+  "find",
+  "help",
+  "how",
+  "recommend",
+  "some",
+  "suitable",
+  "what",
 ]);
 
 const PROMOTION_BOOSTS = Object.freeze({
@@ -47,16 +47,7 @@ function tokenize(value) {
   const normalized = normalizeText(value);
   if (!normalized) return [];
   const latinTokens = normalized.match(/[a-z0-9][a-z0-9.+#_-]*/g) || [];
-  const chineseSegments = normalized.match(/[\u3400-\u9fff]{2,}/g) || [];
-  const chineseTokens = chineseSegments.flatMap((segment) => {
-    if (segment.length <= 6) return [segment];
-    const grams = [];
-    for (let index = 0; index < segment.length - 1; index += 1) {
-      grams.push(segment.slice(index, index + 2));
-    }
-    return grams;
-  });
-  return [...new Set([...latinTokens, ...chineseTokens])].filter(
+  return [...new Set(latinTokens)].filter(
     (token) => token.length >= 2 && !STOP_WORDS.has(token),
   );
 }
@@ -69,8 +60,8 @@ function getDescriptionScore(description) {
   const text = normalizeText(description);
   const length = text.length;
   let score = length >= 240 ? 88 : length >= 140 ? 74 : length >= 70 ? 58 : length >= 30 ? 38 : 15;
-  if (/开源|open[- ]source|github/i.test(description)) score += 4;
-  if (/适合|帮助|use case|场景|workflow|工作流|部署|api/i.test(description)) score += 4;
+  if (/open[- ]source|github/i.test(description)) score += 4;
+  if (/suitable|help|use case|workflow|deploy|api/i.test(description)) score += 4;
   if (/https?:\/\//i.test(description)) score -= 8;
   return clamp(score);
 }
@@ -202,7 +193,7 @@ function rankTools(tools, criteria = {}, options = {}) {
       (left, right) =>
         right.ranking.finalScore - left.ranking.finalScore ||
         right.ranking.baseScore - left.ranking.baseScore ||
-        left.tool.name.localeCompare(right.tool.name, "zh-CN"),
+        left.tool.name.localeCompare(right.tool.name, "en-US"),
     )
     .slice(0, limit);
 }
@@ -232,7 +223,7 @@ function serializeRankedTool({ tool, ranking }) {
       ? {
           tier: tool.promotionTier,
           disclosed: true,
-          label: "付费推广",
+          label: "Paid promotion",
         }
       : null,
     ranking,

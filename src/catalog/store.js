@@ -119,7 +119,7 @@ class CatalogStore {
           tool.lastUpdated,
           "approved",
           JSON.stringify(["seed_metadata_requires_verification"]),
-          "示例种子记录；GitHub 指标未实时抓取。",
+          "Sample seed record; GitHub metrics are not fetched in real time.",
           "none",
           0,
           timestamp,
