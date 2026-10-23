@@ -27,7 +27,7 @@ const toolDefinitions = [
         },
         category: {
           type: "string",
-          description: "Exact catalog category, such as Agent 平台 or 开发框架.",
+          description: "Exact catalog category, such as Agent platforms or Developer frameworks.",
           maxLength: 80,
         },
         use_case: {
@@ -223,7 +223,7 @@ async function handleMessage(message, store) {
           },
           serverInfo: {
             name: "tuoyu-mcp-catalog",
-            title: "拓域 MCP 工具目录",
+            title: "TuoYu MCP Tool Catalog",
             version: "0.1.0",
           },
           instructions:
